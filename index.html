@@ -37,8 +37,32 @@
             width: 100vw;
             height: 100vh;
             overflow: hidden;
-            /* фон игры теперь настраивается из CONFIG.ui.background */
             background: #0f0f0f;
+            box-shadow: 0 0 45px rgba(0, 0, 0, .65) inset, 0 0 45px rgba(255, 215, 179, .18);
+        }
+
+        .app.slowmo::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background: radial-gradient(circle, rgba(255, 205, 150, .18), rgba(0, 0, 0, 0) 70%);
+            animation: slowPulse 1s ease-in-out infinite;
+            z-index: 8;
+        }
+
+        @keyframes slowPulse {
+            0% {
+                opacity: .15
+            }
+
+            50% {
+                opacity: .45
+            }
+
+            100% {
+                opacity: .15
+            }
         }
 
         .safe {
@@ -59,6 +83,77 @@
             border: 1px solid #333;
             border-radius: 999px;
             padding: 6px 12px;
+            box-shadow: 0 0 12px rgba(0, 0, 0, .35);
+        }
+
+        .sheet {
+            animation: slideUp .35s ease-out;
+            box-shadow: 0 -6px 25px rgba(0, 0, 0, .7), 0 -2px 12px rgba(255, 215, 179, .28);
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(40px);
+                opacity: 0
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1
+            }
+        }
+
+        /* ⚡ Электрическая вспышка */
+        .lightning-burst {
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            pointer-events: none;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 255, 255, .9) 0%, rgba(255, 255, 0, .45) 30%, rgba(255, 150, 0, .3) 50%, rgba(0, 0, 0, 0) 70%);
+            transform: translate(-50%, -50%) scale(.3);
+            opacity: .95;
+            filter: drop-shadow(0 0 30px rgba(255, 255, 0, .7)) drop-shadow(0 0 50px rgba(255, 170, 0, .65));
+            animation: lightningExpand .35s ease-out forwards;
+        }
+
+        @keyframes lightningExpand {
+            0% {
+                transform: translate(-50%, -50%) scale(.3) rotate(0deg);
+                opacity: .95;
+                filter: drop-shadow(0 0 20px rgba(255, 255, 0, .6));
+            }
+
+            50% {
+                transform: translate(-50%, -50%) scale(1.4) rotate(20deg);
+                opacity: 1;
+                filter: drop-shadow(0 0 60px rgba(255, 255, 0, 1));
+            }
+
+            100% {
+                transform: translate(-50%, -50%) scale(2) rotate(40deg);
+                opacity: 0;
+            }
+        }
+
+        .lightning-ray {
+            position: absolute;
+            width: 4px;
+            height: 34px;
+            background: linear-gradient(to bottom, #fff, rgba(255, 255, 255, 0));
+            border-radius: 4px;
+            pointer-events: none;
+            opacity: .9;
+            transform-origin: center bottom;
+            animation: lightningRay .35s ease-out forwards;
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, .8));
+        }
+
+        @keyframes lightningRay {
+            100% {
+                transform: translate(var(--dx), var(--dy)) rotate(var(--rot)) scaleY(1.4);
+                opacity: 0;
+            }
         }
 
         .logo,
@@ -68,14 +163,19 @@
         .tornado {
             position: absolute;
             top: -80px;
-            width: 56px;
-            height: 56px;
+            width: 60px;
+            height: 60px;
             object-fit: contain;
             cursor: pointer;
             user-select: none;
             touch-action: manipulation;
             will-change: transform, left, top;
             filter: brightness(1.12) contrast(1.06) drop-shadow(0 10px 14px rgba(0, 0, 0, .65));
+            transition: filter .18s ease, transform .18s ease;
+        }
+
+        .click-bounce:active {
+            transform: scale(.88) rotate(-2deg);
         }
 
         .super {
@@ -83,10 +183,49 @@
             box-shadow: 0 0 0 3px var(--gold), 0 0 14px var(--gold), 0 0 22px rgba(255, 215, 0, .35);
         }
 
+        .super {
+            animation: fall var(--fallDur) linear forwards, tilt 2.2s infinite, glowEnter .35s ease-out;
+        }
+
+        @keyframes glowEnter {
+            from {
+                transform: scale(1.2);
+                filter: brightness(1.4)
+            }
+
+            to {
+                transform: scale(1)
+            }
+        }
+
         .big {
             filter: drop-shadow(0 10px 18px rgba(0, 0, 0, .55)) drop-shadow(0 0 14px rgba(255, 215, 179, .25));
             width: 180px;
             height: 180px;
+        }
+
+        .logo {
+            filter: drop-shadow(0 6px 10px rgba(0, 0, 0, .45)) drop-shadow(0 0 6px rgba(255, 215, 179, .45));
+        }
+
+        .logo:active {
+            filter: brightness(1.4) drop-shadow(0 0 12px rgba(255, 215, 179, .75)) drop-shadow(0 0 22px rgba(255, 170, 90, .45));
+            transform: scale(.94);
+            transition: transform .05s;
+        }
+
+        .app.slowmo .logo,
+        .app.slowmo .super,
+        .app.slowmo .big,
+        .app.slowmo .bomb,
+        .app.slowmo .tornado,
+        .app.slowmo .roma {
+            animation-duration: calc(var(--fallDur) * 2.8), 2.2s !important;
+            filter: drop-shadow(0 0 18px rgba(255, 200, 140, .5));
+        }
+
+        .overlay {
+            backdrop-filter: blur(3px);
         }
 
         .bomb {
@@ -253,12 +392,12 @@
         @keyframes boom {
             60% {
                 transform: translate(-50%, -50%) scale(8);
-                opacity: .85;
+                opacity: .85
             }
 
             100% {
                 transform: translate(-50%, -50%) scale(8);
-                opacity: 0;
+                opacity: 0
             }
         }
 
@@ -287,6 +426,27 @@
             40%,
             60% {
                 transform: translate(4px, 0)
+            }
+        }
+
+        .rabat-glow {
+            animation: rabatGlow .8s ease-out forwards;
+        }
+
+        @keyframes rabatGlow {
+            0% {
+                color: #fff;
+                text-shadow: 0 0 2px #ffd7b3
+            }
+
+            40% {
+                color: #ffd7b3;
+                text-shadow: 0 0 18px #ffe5c6
+            }
+
+            100% {
+                color: #fff;
+                text-shadow: none
             }
         }
 
@@ -352,12 +512,12 @@
         @keyframes critBurst {
             60% {
                 transform: translate(-50%, -50%) scale(10);
-                opacity: .85;
+                opacity: .85
             }
 
             100% {
                 transform: translate(-50%, -50%) scale(10);
-                opacity: 0;
+                opacity: 0
             }
         }
 
@@ -377,12 +537,12 @@
         @keyframes critRay {
             60% {
                 transform: translate(-50%, -50%) rotate(var(--rot)) scaleY(1.5);
-                opacity: .9;
+                opacity: .9
             }
 
             100% {
                 transform: translate(-50%, -50%) rotate(var(--rot)) scaleY(1.5) translateY(-24px);
-                opacity: 0;
+                opacity: 0
             }
         }
 
@@ -398,7 +558,7 @@
 
         @keyframes spin {
             to {
-                transform: rotate(360deg);
+                transform: rotate(360deg)
             }
         }
 
@@ -429,7 +589,7 @@
             content: "";
             position: absolute;
             inset: 0;
-            background: rgba(0, 0, 0, 0.55);
+            background: rgba(0, 0, 0, .55);
             pointer-events: none;
             z-index: 0;
         }
@@ -437,13 +597,22 @@
         @keyframes twistOut {
             70% {
                 transform: translate(var(--dx), var(--dy)) scale(1.35);
-                opacity: .7;
+                opacity: .7
             }
 
             100% {
                 transform: translate(var(--dx), var(--dy)) scale(1.35);
-                opacity: 0;
+                opacity: 0
             }
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            background: radial-gradient(circle at center, rgba(0, 0, 0, 0) 60%, rgba(0, 0, 0, .35) 100%);
+            z-index: 1;
         }
 
         .vortex {
@@ -463,12 +632,12 @@
         @keyframes vortexSpin {
             60% {
                 transform: translate(-50%, -50%) scale(2.8) rotate(220deg);
-                opacity: .9;
+                opacity: .9
             }
 
             100% {
                 transform: translate(-50%, -50%) scale(3) rotate(260deg);
-                opacity: 0;
+                opacity: 0
             }
         }
 
@@ -476,7 +645,7 @@
             font-size: 20px;
             line-height: 1.55;
             color: #f3eee9;
-            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.45);
+            text-shadow: 0 1px 4px rgba(0, 0, 0, .45);
             font-weight: 400;
         }
 
@@ -484,7 +653,7 @@
             margin: 8px 0;
             font-size: 18px;
             color: #ffffffd8;
-            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+            text-shadow: 0 1px 3px rgba(0, 0, 0, .4);
         }
 
         .text-strong {
@@ -504,7 +673,7 @@
             text-shadow: 0 1px 4px rgba(0, 0, 0, .5);
         }
 
-        /* --- ROMA (твой «супер-объект») — оранжевая подсветка и 84px --- */
+        /* ROMA */
         .roma {
             position: absolute;
             top: -80px;
@@ -515,7 +684,6 @@
             user-select: none;
             touch-action: manipulation;
             border-radius: 50%;
-            /* тёплая оранжевая подсветка */
             filter: drop-shadow(0 10px 18px rgba(0, 0, 0, .55)) drop-shadow(0 0 22px rgba(255, 168, 77, .45));
             box-shadow: 0 0 0 3px #ffa84d, 0 0 16px #ffa84d, 0 0 28px rgba(255, 168, 77, .55);
             animation-name: fall, tilt;
@@ -524,7 +692,6 @@
             animation-iteration-count: 1, infinite;
         }
 
-        /* --- SLOWMO: замедляем падение у всех объектов --- */
         .app.slowmo .logo,
         .app.slowmo .super,
         .app.slowmo .big,
@@ -534,7 +701,6 @@
             animation-duration: calc(var(--fallDur, 2000ms) * 2.8), 2.2s !important;
         }
 
-        /* затемнение поверх сцены в слоумо */
         .app.slowmo::after {
             content: "";
             position: absolute;
@@ -544,7 +710,7 @@
             z-index: 9;
         }
 
-        /* === PRISM FX для ROMA (Новый эффект) === */
+        /* PRISM FX */
         .prism-core {
             position: absolute;
             left: 0;
@@ -553,9 +719,7 @@
             width: 90px;
             height: 90px;
             border-radius: 50%;
-            background:
-                radial-gradient(circle at 50% 50%, rgba(255, 255, 255, .95) 0%, rgba(255, 255, 255, 0) 55%),
-                conic-gradient(from 0deg, #ffd7b3, #ffd700, #ff8a00, #ff4d4d, #b36bff, #66d9ff, #ffd7b3);
+            background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, .95) 0%, rgba(255, 255, 255, 0) 55%), conic-gradient(from 0deg, #ffd7b3, #ffd700, #ff8a00, #ff4d4d, #b36bff, #66d9ff, #ffd7b3);
             box-shadow: 0 0 24px rgba(255, 215, 179, .9), 0 0 60px rgba(255, 215, 0, .45);
             pointer-events: none;
             z-index: 9;
@@ -565,12 +729,12 @@
         @keyframes prismPulse {
             60% {
                 transform: translate(-50%, -50%) scale(1.4);
-                opacity: .95;
+                opacity: .95
             }
 
             100% {
                 transform: translate(-50%, -50%) scale(1.6);
-                opacity: 0;
+                opacity: 0
             }
         }
 
@@ -598,12 +762,12 @@
         @keyframes shardFly {
             75% {
                 transform: translate(var(--dx), var(--dy)) rotate(var(--rot)) scale(1.2);
-                opacity: .9;
+                opacity: .9
             }
 
             100% {
                 transform: translate(calc(var(--dx)*1.25), calc(var(--dy)*1.25)) rotate(var(--rot)) scale(1.2);
-                opacity: 0;
+                opacity: 0
             }
         }
 
@@ -625,12 +789,12 @@
         @keyframes haloExpand {
             70% {
                 transform: translate(-50%, -50%) scale(2.4);
-                opacity: .8;
+                opacity: .8
             }
 
             100% {
                 transform: translate(-50%, -50%) scale(2.6);
-                opacity: 0;
+                opacity: 0
             }
         }
 
@@ -652,11 +816,31 @@
         @keyframes trailFade {
             100% {
                 transform: translate(var(--dx), var(--dy));
-                opacity: 0;
+                opacity: 0
             }
         }
 
-        /* лёгкая виньетка при слоумо */
+        .totalGames-pop {
+            animation: tgPop .45s ease-out forwards;
+        }
+
+        @keyframes tgPop {
+            0% {
+                transform: scale(1);
+                color: #eee
+            }
+
+            40% {
+                transform: scale(1.25);
+                color: #ffd7b3
+            }
+
+            100% {
+                transform: scale(1);
+                color: #eee
+            }
+        }
+
         .app.slowmo .freeze-vignette {
             content: "";
             position: absolute;
@@ -687,47 +871,25 @@
         </div>
         <div class="overlay" id="startOv">
             <div class="modal">
-                <h1 class="title-anim" style="
-                    font-size:32px;
-                    font-weight:900;
-                    background: linear-gradient(90deg,#ffd7b3,#ffe9c8);
-                    -webkit-background-clip: text;
-                    color: transparent;
-                    text-shadow:0 2px 8px rgba(0,0,0,.45);
-                ">
+                <h1 class="title-anim"
+                    style="font-size:32px;font-weight:900;background:linear-gradient(90deg,#ffd7b3,#ffe9c8);-webkit-background-clip:text;color:transparent;text-shadow:0 2px 8px rgba(0,0,0,.45);">
                     Gra od Elephant Coffee — ZŁAP SŁONIA 🐘
-                </h1></br></br>
+                </h1><br><br>
                 <p style="opacity:.9;line-height:1.4;font-size:18px;">
                     Cześć! Gra jest w wersji testowej — nagrody będą aktywne po oficjalnym starcie 🫶
                 </p>
                 <p style="opacity:.9;line-height:1.4" id="rulesText"></p>
                 <button class="btn" id="start">Graj!</button>
+                <p id="totalGamesInfo" class="text-muted" style="margin-top:8px">Twoje rozegrane gry: 0</p>
             </div>
         </div>
     </div>
 
     <script>
-        /* =========================================================
-           ⚙️ CONFIG — всё меняем здесь
-           ========================================================= */
+        /* ===================== CONFIG ===================== */
         const CONFIG = {
-            game: {
-                duration: 15000,
-                spawnInterval: 175,
-                fallMin: 1800,
-                fallMax: 2800,
-                cap: 10,           // теперь это лимит в zł
-                chSwim: 0.35,
-                chEvade: 0.26
-            },
-
-            /* 🎨 Фон игры */
-            ui: {
-                /*background: '#0f0f0f'*/
-                background: 'url(./background.jpg) center center / cover no-repeat #000'
-            },
-
-            /* 🎵 Звуки */
+            game: { duration: 15000, spawnInterval: 175, fallMin: 1800, fallMax: 2800, cap: 10, chSwim: 0.35, chEvade: 0.26 },
+            ui: { background: 'url(./background.jpg) center center / cover no-repeat #000' },
             sounds: {
                 enabled: true,
                 bg: { src: 'background.mp3', volume: 0.35 },
@@ -735,99 +897,61 @@
                 bomb: { src: 'bomb.mp3', volume: 0.7 },
                 tornado: { src: './tornado.mp3', volume: 0.6 }
             },
-
-            /* 🧩 Элементы + звуки */
             elements: {
                 normal: {
-                    reward: 0.1,
-                    allowEvade: true,
-                    allowSwim: true,
-                    sound: { src: './basic.mp3', volume: 0.5, pool: 4 },
+                    reward: 0.1, allowEvade: true, allowSwim: true, sound: { src: './basic.mp3', volume: 0.5, pool: 4 },
                     items: [
                         { src: 'basic.png', size: 56, note: 'Бразилия 250г', sound: { src: './pack250.mp3', volume: 0.55, pool: 3 } },
                         { src: 'basic.png', size: 56, note: 'Balance 70/30' },
                         { src: 'basic.png', size: 56, note: 'Brazil Santos' },
                         { src: 'basic.png', size: 56, note: 'Alternative' }
                     ],
-                    fallbackSvg:
-                        `<svg xmlns='http://www.w3.org/2000/svg' width='56' height='56'><rect x='5' y='5' width='46' height='46' rx='8' fill='#ffd7b3'/></svg>`
+                    fallbackSvg: `<svg xmlns='http://www.w3.org/2000/svg' width='56' height='56'><rect x='5' y='5' width='46' height='46' rx='8' fill='#ffd7b3'/></svg>`
                 },
-
                 super: {
-                    reward: 0.80, size: 56, src: './logo.png', chance: 0.30, maxPerGame: 3,
-                    allowEvade: true, allowSwim: true,
+                    reward: 0.80, size: 56, src: './logo.png', chance: 0.30, maxPerGame: 3, allowEvade: true, allowSwim: true,
                     sound: { src: './super.mp3', volume: 0.7 },
-                    fallbackSvg:
-                        `<svg xmlns='http://www.w3.org/2000/svg' width='56' height='56'><circle cx='28' cy='28' r='26' fill='#ffd7b3'/></svg>`
+                    fallbackSvg: `<svg xmlns='http://www.w3.org/2000/svg' width='56' height='56'><circle cx='28' cy='28' r='26' fill='#ffd7b3'/></svg>`
                 },
-
-                big: {
-                    reward: 0.5, size: 185, src: './big.png', chance: 0.30, maxPerGame: 3,
-                    allowEvade: true, allowSwim: true,
-                    sound: { src: './hit.mp3', volume: 0.75 }
-                },
-
-                bomb: {
-                    reward: -3.0, size: 65, chance: 0.25,
-                    icon: '💣', imageSrc: '', allowEvade: false, allowSwim: true,
-                    sound: { src: './bomb.mp3', volume: 0.7 }
-                },
-
+                big: { reward: 0.5, size: 185, src: './big.png', chance: 0.30, maxPerGame: 3, allowEvade: true, allowSwim: true, sound: { src: './hit.mp3', volume: 0.75 } },
+                bomb: { reward: -3.0, size: 65, chance: 0.25, icon: '💣', imageSrc: '', allowEvade: false, allowSwim: true, sound: { src: './bomb.mp3', volume: 0.7 } },
                 tornado: {
-                    reward: -0.4, size: 62, chance: 0.05, src: 'tornado.png',
-                    allowEvade: true, allowSwim: true,
-                    pull: { radius: 240, strength: 60, dur: 620 },
-                    vibr: [40, 20, 60],
-                    sound: { src: './tornado.mp3', volume: 0.2 }
+                    reward: -0.4, size: 62, chance: 0.05, src: 'tornado.png', allowEvade: true, allowSwim: true,
+                    pull: { radius: 240, strength: 60, dur: 620 }, vibr: [40, 20, 60], sound: { src: './tornado.mp3', volume: 0.2 }
                 },
-
-                /* 🐘 ROMA — твой супер-объект (замедляет время) */
                 roma: {
-                    reward: 0.0,        // очки не даём — эффект slow-mo
-                    size: 84,
-                    src: './roma.png',  // <--- положи файл roma.png рядом с этим HTML
-                    chance: 0.25,
-                    maxPerGame: 1,      // один раз за раунд
-                    allowEvade: false,
-                    allowSwim: true,
-                    // свой медленный диапазон падения
-                    fallMin: 2400,
-                    fallMax: 3600,
-                    sound: { src: './roma.mp3', volume: 0.7 },
-                    fallbackSvg:
-                        `<svg xmlns='http://www.w3.org/2000/svg' width='64' height='64'><circle cx='32' cy='32' r='30' fill='#ffd7b3'/></svg>`
+                    reward: 0.0, size: 84, src: './roma.png', chance: 0.25, maxPerGame: 1, allowEvade: false, allowSwim: true,
+                    fallMin: 2400, fallMax: 3600, sound: { src: './roma.mp3', volume: 0.7 },
+                    fallbackSvg: `<svg xmlns='http://www.w3.org/2000/svg' width='64' height='64'><circle cx='32' cy='32' r='30' fill='#ffd7b3'/></svg>`
                 }
             },
-
             vib: { normal: 18, super: 26, bomb: [80, 40, 120] }
         };
-        /* ========================= END CONFIG ========================= */
+        /* ================================================== */
 
-        /* ========= Утилиты ========= */
         const app = document.getElementById('app');
         const dEl = document.getElementById('discount');
         const tEl = document.getElementById('time');
         const startOv = document.getElementById('startOv');
 
-        // формат zł вместо процентов
-        const zl = v => new Intl.NumberFormat('pl-PL', {
-            style: 'currency',
-            currency: 'PLN',
-            maximumFractionDigits: (Math.abs(v) % 1 === 0 ? 0 : 2)
-        }).format(v);
+        /* Счётчик игр */
+        const LS_KEYS = { total: 'ec_totalGames' };
+        let totalGames = Number(localStorage.getItem(LS_KEYS.total) || 0);
+        function renderTotalGames() {
+            const el = document.getElementById('totalGamesInfo'); if (!el) return;
+            el.textContent = `Twoje rozegrane gry: ${totalGames}`;
+            el.classList.remove('totalGames-pop'); void el.offsetWidth; el.classList.add('totalGames-pop');
+        }
+        renderTotalGames();
 
+        const zl = v => new Intl.NumberFormat('pl-PL', { style: 'currency', currency: 'PLN', maximumFractionDigits: (Math.abs(v) % 1 === 0 ? 0 : 2) }).format(v);
         const vibr = p => { if (!p) return; if (navigator.vibrate) try { navigator.vibrate(p) } catch (_) { } };
         const rand = (a, b) => Math.random() * (b - a) + a;
         const clamp = (n, a, b) => Math.max(a, Math.min(b, n));
-
         let running = false, discount = 0, superCount = 0, bigCount = 0, t0 = 0, spawnTimer = null;
 
-        /* ========= Применяем фон из CONFIG ========= */
-        (function applyBackground() {
-            if (CONFIG?.ui?.background) app.style.background = CONFIG.ui.background;
-        })();
+        (function applyBackground() { if (CONFIG?.ui?.background) app.style.background = CONFIG.ui.background; })();
 
-        /* ========= Правила из CONFIG (в zł) ========= */
         (function setRules() {
             const E = CONFIG.elements;
             const txt = [
@@ -837,16 +961,14 @@
                 `💣 Bomba = <b>${zl(E.bomb.reward)}</b>`,
                 `• Zestaw trzech kaw = <b>${zl(E.tornado.reward)}</b>`,
                 `• Złap mnie — spowolnienie czasu na <b>3 sekundy</b>`
-
             ].join('<br>');
             document.getElementById('rulesText').innerHTML = txt;
         })();
 
-        /* ========= Аудио ========= */
+        /* Аудио */
         const SND = {}; let __idx = 0; let bgMusic = null;
         function regSound(key, cfg) {
-            if (!cfg || !cfg.src) return;
-            const { src, volume = 1, pool = 1 } = cfg;
+            if (!cfg || !cfg.src) return; const { src, volume = 1, pool = 1 } = cfg;
             if (pool > 1) { SND[key] = Array.from({ length: pool }, () => { const a = new Audio(src); a.volume = volume; a.preload = 'auto'; return a; }); }
             else { const a = new Audio(src); a.volume = volume; a.preload = 'auto'; SND[key] = a; }
         }
@@ -861,16 +983,12 @@
             if (SS.bg && SS.bg.src) { bgMusic = new Audio(SS.bg.src); bgMusic.loop = true; bgMusic.volume = SS.bg.volume ?? 1; bgMusic.preload = 'auto'; }
             regSound('hit', SS.hit); regSound('bomb', SS.bomb); regSound('tornado', SS.tornado);
             const E = CONFIG.elements;
-            regSound('el.normal', E.normal.sound);
-            regSound('el.super', E.super.sound);
-            regSound('el.big', E.big.sound);
-            regSound('el.bomb', E.bomb.sound);
-            regSound('el.tornado', E.tornado.sound);
-            regSound('el.roma', E.roma.sound);
+            regSound('el.normal', E.normal.sound); regSound('el.super', E.super.sound); regSound('el.big', E.big.sound);
+            regSound('el.bomb', E.bomb.sound); regSound('el.tornado', E.tornado.sound); regSound('el.roma', E.roma.sound);
             (E.normal.items || []).forEach((it, i) => regSound(`el.normal.${i}`, it.sound));
         })();
 
-        /* ========= UI-эффекты ========= */
+        /* UI эффекты */
         function ring(x, y) { const r = document.createElement('div'); r.className = 'ring'; r.style.left = x + 'px'; r.style.top = y + 'px'; app.appendChild(r); setTimeout(() => r.remove(), 520); }
         function confetti(x, y, n = 14) {
             const colors = ['#ffd7b3', '#ffd700', '#ffa84d', '#ffffff'];
@@ -880,6 +998,16 @@
                 const dx = (Math.random() < .5 ? -1 : 1) * (20 + Math.random() * 60), dy = -(20 + Math.random() * 60), rot = (Math.random() < .5 ? -1 : 1) * (120 + Math.random() * 180) + 'deg';
                 c.style.setProperty('--dx', dx + 'px'); c.style.setProperty('--dy', dy + 'px'); c.style.setProperty('--rot', rot);
                 app.appendChild(c); setTimeout(() => c.remove(), 1000);
+            }
+        }
+        function lightningFX(x, y) {
+            const core = document.createElement('div'); core.className = 'lightning-burst'; core.style.left = x + 'px'; core.style.top = y + 'px'; app.appendChild(core); setTimeout(() => core.remove(), 350);
+            const rays = 10; for (let i = 0; i < rays; i++) {
+                const r = document.createElement('div'); r.className = 'lightning-ray'; r.style.left = x + 'px'; r.style.top = y + 'px';
+                const angle = (i / rays) * Math.PI * 2; const dist = 40 + Math.random() * 60;
+                r.style.setProperty('--dx', Math.cos(angle) * dist + 'px'); r.style.setProperty('--dy', Math.sin(angle) * dist + 'px');
+                r.style.setProperty('--rot', (angle * 180 / Math.PI + (Math.random() * 40 - 20)) + 'deg');
+                app.appendChild(r); setTimeout(() => r.remove(), 350);
             }
         }
         function floatLabel(x, y, text) { const f = document.createElement('div'); f.className = 'float'; f.textContent = text; f.style.left = x + 'px'; f.style.top = y + 'px'; app.appendChild(f); setTimeout(() => f.remove(), 900); }
@@ -918,169 +1046,86 @@
         }
         function vortex(x, y) { const v = document.createElement('div'); v.className = 'vortex'; v.style.left = x + 'px'; v.style.top = y + 'px'; app.appendChild(v); setTimeout(() => v.remove(), 620); }
 
-        /* === PRISM FX для ROMA === */
         function romaPrismFX(x, y) {
-            // core
-            const core = document.createElement('div');
-            core.className = 'prism-core';
-            core.style.left = x + 'px'; core.style.top = y + 'px';
-            app.appendChild(core);
-            setTimeout(() => core.remove(), 720);
-
-            // halo
-            const halo = document.createElement('div');
-            halo.className = 'prism-halo';
-            halo.style.left = x + 'px'; halo.style.top = y + 'px';
-            app.appendChild(halo);
-            setTimeout(() => halo.remove(), 820);
-
-            // shards
-            const shards = 26;
-            for (let i = 0; i < shards; i++) {
-                const s = document.createElement('div');
-                s.className = 'prism-shard';
-                s.style.left = x + 'px'; s.style.top = y + 'px';
-                const ang = (i / shards) * Math.PI * 2 + (Math.random() * 0.35 - 0.175);
-                const r = 60 + Math.random() * 110;
-                const dx = Math.cos(ang) * r + 'px';
-                const dy = Math.sin(ang) * r + 'px';
-                const rot = (Math.random() * 260 - 130) + 'deg';
-                s.style.setProperty('--dx', dx);
-                s.style.setProperty('--dy', dy);
-                s.style.setProperty('--rot', rot);
-                s.style.filter = `hue-rotate(${Math.floor(Math.random() * 360)}deg)`;
-                app.appendChild(s);
-                setTimeout(() => s.remove(), 950);
+            const core = document.createElement('div'); core.className = 'prism-core'; core.style.left = x + 'px'; core.style.top = y + 'px'; app.appendChild(core); setTimeout(() => core.remove(), 720);
+            const halo = document.createElement('div'); halo.className = 'prism-halo'; halo.style.left = x + 'px'; halo.style.top = y + 'px'; app.appendChild(halo); setTimeout(() => halo.remove(), 820);
+            const shards = 26; for (let i = 0; i < shards; i++) {
+                const s = document.createElement('div'); s.className = 'prism-shard'; s.style.left = x + 'px'; s.style.top = y + 'px';
+                const ang = (i / shards) * Math.PI * 2 + (Math.random() * 0.35 - 0.175), r = 60 + Math.random() * 110;
+                s.style.setProperty('--dx', Math.cos(ang) * r + 'px'); s.style.setProperty('--dy', Math.sin(ang) * r + 'px'); s.style.setProperty('--rot', (Math.random() * 260 - 130) + 'deg');
+                s.style.filter = `hue-rotate(${Math.floor(Math.random() * 360)}deg)`; app.appendChild(s); setTimeout(() => s.remove(), 950);
             }
-
-            // trails
-            const trails = 16;
-            for (let i = 0; i < trails; i++) {
-                const t = document.createElement('div');
-                t.className = 'prism-trail';
-                t.style.left = x + 'px'; t.style.top = y + 'px';
-                const ang = Math.random() * Math.PI * 2;
-                const r = 30 + Math.random() * 70;
-                t.style.setProperty('--dx', (Math.cos(ang) * r) + 'px');
-                t.style.setProperty('--dy', (Math.sin(ang) * r) + 'px');
-                app.appendChild(t);
-                setTimeout(() => t.remove(), 620);
+            const trails = 16; for (let i = 0; i < trails; i++) {
+                const t = document.createElement('div'); t.className = 'prism-trail'; t.style.left = x + 'px'; t.style.top = y + 'px';
+                const ang = Math.random() * Math.PI * 2, r = 30 + Math.random() * 70;
+                t.style.setProperty('--dx', Math.cos(ang) * r + 'px'); t.style.setProperty('--dy', Math.sin(ang) * r + 'px'); app.appendChild(t); setTimeout(() => t.remove(), 620);
             }
-
-            // лёгкая «виньетка» поверх
-            const vg = document.createElement('div');
-            vg.className = 'freeze-vignette';
-            app.appendChild(vg);
-            setTimeout(() => vg.remove(), 260);
+            const vg = document.createElement('div'); vg.className = 'freeze-vignette'; app.appendChild(vg); setTimeout(() => vg.remove(), 260);
         }
 
-        /* === Мощные осколки при клике по ROMA === */
         function shardsBurst(x, y, n = 24) {
             for (let i = 0; i < n; i++) {
-                const d = document.createElement('div');
-                d.style.position = 'absolute';
-                d.style.left = x + 'px';
-                d.style.top = y + 'px';
-                d.style.width = 0;
-                d.style.height = 0;
-                const col = Math.random() < .5 ? '#ffa84d' : '#ffd7b3';
-                const s = 10 + Math.random() * 12;
-                d.style.borderLeft = `${s}px solid transparent`;
-                d.style.borderRight = `${s}px solid transparent`;
-                d.style.borderBottom = `${s * 1.6}px solid ${col}`;
-                d.style.filter = 'drop-shadow(0 2px 8px rgba(0,0,0,.45))';
-                d.style.pointerEvents = 'none';
-
-                const ang = Math.random() * Math.PI * 2;
-                const dist = 60 + Math.random() * 140;
-                const tx = Math.cos(ang) * dist;
-                const ty = Math.sin(ang) * dist * (Math.random() < .4 ? 1.6 : 1.0);
-
-                d.animate([
-                    { transform: 'translate(-50%, -50%) rotate(0deg)', opacity: 1 },
-                    { transform: `translate(${tx - 50}px, ${ty - 50}px) rotate(${(Math.random() * 360) | 0}deg)`, opacity: 0 }
-                ], { duration: 700 + Math.random() * 600, easing: 'cubic-bezier(.2,.7,.2,1)', fill: 'forwards' });
-
-                app.appendChild(d);
-                setTimeout(() => d.remove(), 1400);
+                const d = document.createElement('div'); d.style.position = 'absolute'; d.style.left = x + 'px'; d.style.top = y + 'px'; d.style.width = 0; d.style.height = 0;
+                const col = Math.random() < .5 ? '#ffa84d' : '#ffd7b3'; const s = 10 + Math.random() * 12;
+                d.style.borderLeft = `${s}px solid transparent`; d.style.borderRight = `${s}px solid transparent`; d.style.borderBottom = `${s * 1.6}px solid ${col}`;
+                d.style.filter = 'drop-shadow(0 2px 8px rgba(0,0,0,.45))'; d.style.pointerEvents = 'none';
+                const ang = Math.random() * Math.PI * 2, dist = 60 + Math.random() * 140, tx = Math.cos(ang) * dist, ty = Math.sin(ang) * dist * (Math.random() < .4 ? 1.6 : 1.0);
+                d.animate([{ transform: 'translate(-50%,-50%) rotate(0deg)', opacity: 1 }, { transform: `translate(${tx - 50}px, ${ty - 50}px) rotate(${(Math.random() * 360) | 0}deg)`, opacity: 0 }],
+                    { duration: 700 + Math.random() * 600, easing: 'cubic-bezier(.2,.7,.2,1)', fill: 'forwards' });
+                app.appendChild(d); setTimeout(() => d.remove(), 1400);
             }
         }
 
-        /* === Таблица лидеров (localStorage) === */
+        /* Таблица лидеров (top-3) */
         const LB_KEY = 'ec_leaderboard_v1';
-        function loadScores() {
-            try { return JSON.parse(localStorage.getItem(LB_KEY) || '[]'); } catch { return []; }
-        }
+        function loadScores() { try { return JSON.parse(localStorage.getItem(LB_KEY) || '[]'); } catch { return []; } }
         function saveScore(name, score) {
             const arr = loadScores();
             arr.push({ name: String(name || 'Gość').slice(0, 16), score: Number(score) || 0, ts: Date.now() });
             arr.sort((a, b) => b.score - a.score);
-            const top = arr.slice(0, 5);
+            const top = arr.slice(0, 3);            // <- TOP-3
             localStorage.setItem(LB_KEY, JSON.stringify(top));
             return top;
         }
         function renderLeaderboardHTML(list) {
-            list = (list || []).slice(0, 5); 
+            list = (list || []).slice(0, 3);            // <- TOP-3
             if (!list.length) return '<p class="text-muted" style="text-align:center">Brak wyników — bądź pierwszy!</p>';
-            const rows = list.map((it, i) =>
-                `<tr>
-                   <td style="padding:6px 10px">${i + 1}</td>
-                   <td style="padding:6px 10px">${it.name}</td>
-                   <td style="padding:6px 10px; text-align:right">${zl(it.score)}</td>
-                 </tr>`
-            ).join('');
+            const rows = list.map((it, i) => `
+        <tr>
+          <td style="padding:6px 10px">${i + 1}</td>
+          <td style="padding:6px 10px">${it.name}</td>
+          <td style="padding:6px 10px; text-align:right">${zl(it.score)}</td>
+        </tr>`).join('');
             return `
-                <div style="margin-top:12px">
-                  <h3 style="margin:8px 0 6px 0">🏆 Tablica wyników</h3>
-                  <table style="width:100%; border-collapse:collapse; font-weight:600; background:#141414; border:1px solid #222; border-radius:12px; overflow:hidden">
-                    <thead>
-                      <tr style="background:#191919">
-                        <th style="text-align:left; padding:6px 10px; width:50px">#</th>
-                        <th style="text-align:left; padding:6px 10px">Imię</th>
-                        <th style="text-align:right; padding:6px 10px">Wynik</th>
-                      </tr>
-                    </thead>
-                    <tbody>${rows}</tbody>
-                  </table>
-                </div>
-            `;
+        <div style="margin-top:12px">
+          <h3 style="margin:8px 0 6px 0">🏆 Tablica wyników</h3>
+          <table style="width:100%; border-collapse:collapse; font-weight:600; background:#141414; border:1px solid #222; border-radius:12px; overflow:hidden">
+            <thead>
+              <tr style="background:#191919">
+                <th style="text-align:left; padding:6px 10px; width:50px">#</th>
+                <th style="text-align:left; padding:6px 10px">Imię</th>
+                <th style="text-align:right; padding:6px 10px">Wynik</th>
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>`;
         }
 
-        /* ========= SLOW-MO логика ========= */
+        /* SLOW-MO */
         let slowmoTimerId = null;
-        function enterSlowmo(ms = 3000) {
-            app.classList.add('slowmo');
-            try { if (navigator.vibrate) navigator.vibrate([40, 60, 40]); } catch { }
-            if (slowmoTimerId) { clearTimeout(slowmoTimerId); slowmoTimerId = null; }
-            slowmoTimerId = setTimeout(exitSlowmo, ms);
-        }
-        function exitSlowmo() {
-            app.classList.remove('slowmo');
-            if (slowmoTimerId) { clearTimeout(slowmoTimerId); slowmoTimerId = null; }
-        }
+        function enterSlowmo(ms = 3000) { app.classList.add('slowmo'); try { if (navigator.vibrate) navigator.vibrate([40, 60, 40]); } catch { }; if (slowmoTimerId) { clearTimeout(slowmoTimerId); slowmoTimerId = null; } slowmoTimerId = setTimeout(exitSlowmo, ms); }
+        function exitSlowmo() { app.classList.remove('slowmo'); if (slowmoTimerId) { clearTimeout(slowmoTimerId); slowmoTimerId = null; } }
 
-        /* ========= Счёт ========= */
-        function update() {
-            const cap = CONFIG.game.cap;
-            if (discount < 0) discount = 0;
-            if (discount > cap) discount = cap;
-            dEl.textContent = zl(discount);
-        }
+        function update() { const cap = CONFIG.game.cap; if (discount < 0) discount = 0; if (discount > cap) discount = cap; dEl.textContent = zl(discount); }
 
-        /* ========= Падение ========= */
         function fallSetup(el, { allowEvade = true, allowSwim = true, size = 56, customDur = null } = {}) {
             const G = CONFIG.game;
             el.style.left = rand(0, app.clientWidth - size) + 'px';
             if (Math.random() < 0.25) el.style.setProperty('--rot', (Math.random() < 0.5 ? -1 : 1) * rand(120, 360) + 'deg');
-
-            // поддержка персональной длительности
             const dur = (customDur ?? rand(G.fallMin, G.fallMax));
-
-            el.style.top = '-80px';
-            el.style.setProperty('--fallDur', dur + 'ms');
-            el.style.animation = 'fall ' + dur + 'ms linear forwards';
+            el.style.top = '-80px'; el.style.setProperty('--fallDur', dur + 'ms'); el.style.animation = 'fall ' + dur + 'ms linear forwards';
             el.addEventListener('animationend', () => el.remove(), { once: true });
-
             if (allowSwim && Math.random() < G.chSwim) {
                 const amp = 16 + Math.random() * 20, freq = 0.5 + Math.random() * 0.7, vel = (Math.random() < 0.5 ? -1 : 1) * (8 + Math.random() * 20);
                 const x0 = parseFloat(el.style.left) || 0, start = performance.now();
@@ -1097,290 +1142,187 @@
             app.appendChild(el);
         }
 
-        /* ========= Фабрики ========= */
+        /* Фабрики */
         const svgToDataUri = svg => "data:image/svg+xml;utf8," + encodeURIComponent(svg);
-
         function makeNormal() {
-            const N = CONFIG.elements.normal;
-            const idx = Math.floor(Math.random() * N.items.length);
-            const pick = N.items[idx] || { src: '', size: 56 };
-            const img = new Image(); img.decoding = 'async'; img.loading = 'eager';
-            img.src = pick.src || svgToDataUri(N.fallbackSvg);
-            img.onerror = () => { img.onerror = null; img.src = svgToDataUri(N.fallbackSvg); };
+            const N = CONFIG.elements.normal; const idx = Math.floor(Math.random() * N.items.length); const pick = N.items[idx] || { src: '', size: 56 };
+            const img = new Image(); img.decoding = 'async'; img.loading = 'eager'; img.src = pick.src || svgToDataUri(N.fallbackSvg); img.onerror = () => { img.onerror = null; img.src = svgToDataUri(N.fallbackSvg); };
             const key = SND[`el.normal.${idx}`] ? `el.normal.${idx}` : (SND['el.normal'] ? 'el.normal' : 'hit');
             return { el: img, size: pick.size || 56, reward: N.reward, allowEvade: N.allowEvade, allowSwim: N.allowSwim, soundKey: key };
         }
         function makeSuper() {
-            const S = CONFIG.elements.super;
-            const img = new Image(); img.decoding = 'async'; img.loading = 'eager';
-            img.src = S.src || svgToDataUri(S.fallbackSvg);
-            img.onerror = () => { img.onerror = null; img.src = svgToDataUri(S.fallbackSvg); };
-            const key = SND['el.super'] ? 'el.super' : 'hit';
+            const S = CONFIG.elements.super; const img = new Image(); img.decoding = 'async'; img.loading = 'eager'; img.src = S.src || svgToDataUri(S.fallbackSvg); img.onerror = () => { img.onerror = null; img.src = svgToDataUri(S.fallbackSvg); }; const key = SND['el.super'] ? 'el.super' : 'hit';
             return { el: img, size: S.size, reward: S.reward, allowEvade: S.allowEvade, allowSwim: S.allowSwim, soundKey: key };
         }
         function makeBig() {
-            const B = CONFIG.elements.big;
-            const img = new Image(); img.decoding = 'async'; img.loading = 'eager'; img.src = B.src || '';
-            const key = SND['el.big'] ? 'el.big' : 'hit';
+            const B = CONFIG.elements.big; const img = new Image(); img.decoding = 'async'; img.loading = 'eager'; img.src = B.src || ''; const key = SND['el.big'] ? 'el.big' : 'hit';
             return { el: img, size: B.size, reward: B.reward, allowEvade: B.allowEvade, allowSwim: B.allowSwim, soundKey: key };
         }
         function makeBomb() {
-            const B = CONFIG.elements.bomb; let node, isImage = false;
-            if (B.imageSrc) { const img = new Image(); img.decoding = 'async'; img.loading = 'eager'; img.src = B.imageSrc; node = img; isImage = true; }
-            else { const div = document.createElement('div'); div.className = 'bomb'; div.textContent = B.icon || '💣'; node = div; }
-            const key = SND['el.bomb'] ? 'el.bomb' : 'bomb';
-            return { el: node, size: B.size, reward: B.reward, allowEvade: B.allowEvade, allowSwim: B.allowSwim, isImage, soundKey: key };
+            const B = CONFIG.elements.bomb; let node, isImage = false; if (B.imageSrc) { const img = new Image(); img.decoding = 'async'; img.loading = 'eager'; img.src = B.imageSrc; node = img; isImage = true; } else { const div = document.createElement('div'); div.className = 'bomb'; div.textContent = B.icon || '💣'; node = div; }
+            const key = SND['el.bomb'] ? 'el.bomb' : 'bomb'; return { el: node, size: B.size, reward: B.reward, allowEvade: B.allowEvade, allowSwim: B.allowSwim, isImage, soundKey: key };
         }
         function makeTornado() {
-            const T = CONFIG.elements.tornado;
-            const div = document.createElement('div'); div.className = 'tornado';
+            const T = CONFIG.elements.tornado; const div = document.createElement('div'); div.className = 'tornado';
             if (T.src) { const img = new Image(); img.src = T.src; img.style.width = (T.size - 8) + 'px'; img.style.height = (T.size - 8) + 'px'; img.style.pointerEvents = 'none'; img.onerror = () => img.remove(); div.appendChild(img); }
-            const key = SND['el.tornado'] ? 'el.tornado' : 'tornado';
-            return { el: div, size: T.size, reward: T.reward, allowEvade: T.allowEvade, allowSwim: T.allowSwim, soundKey: key };
+            const key = SND['el.tornado'] ? 'el.tornado' : 'tornado'; return { el: div, size: T.size, reward: T.reward, allowEvade: T.allowEvade, allowSwim: T.allowSwim, soundKey: key };
         }
         function makeRoma() {
-            const R = CONFIG.elements.roma;
-            const img = new Image(); img.decoding = 'async'; img.loading = 'eager';
-            img.src = R.src || svgToDataUri(R.fallbackSvg);
-            img.onerror = () => { img.onerror = null; img.src = svgToDataUri(R.fallbackSvg); };
-            const key = SND['el.roma'] ? 'el.roma' : (SND['el.super'] ? 'el.super' : 'hit');
-            return { el: img, size: R.size, reward: R.reward, allowEvade: R.allowEvade, allowSwim: R.allowSwim, soundKey: key };
+            const R = CONFIG.elements.roma; const img = new Image(); img.decoding = 'async'; img.loading = 'eager'; img.src = R.src || svgToDataUri(R.fallbackSvg); img.onerror = () => { img.onerror = null; img.src = svgToDataUri(R.fallbackSvg); };
+            const key = SND['el.roma'] ? 'el.roma' : (SND['el.super'] ? 'el.super' : 'hit'); return { el: img, size: R.size, reward: R.reward, allowEvade: R.allowEvade, allowSwim: R.allowSwim, soundKey: key };
         }
 
-        /* ========= Планирование спец-объектов ========= */
-        let tickNo = 0;            // текущий номер тика спавна
-        let superTick = null;      // когда показать супер-слона
-        let bigTicks = new Set();  // когда показывать big
-        let romaCount = 0;         // сколько раз заспавнен Рома
-        let romaTick = null;       // когда появится Рома
+        /* Планирование */
+        let tickNo = 0, superTick = null, bigTicks = new Set(), romaCount = 0, romaTick = null;
         const randi = (a, b) => Math.floor(Math.random() * (b - a + 1)) + a;
 
         function planSpecials() {
             const totalTicks = Math.floor(CONFIG.game.duration / CONFIG.game.spawnInterval);
-
-            // окна появления (доли длительности раунда)
-            const superWin = [0.35, 0.85];
-            const bigWin = [0.15, 0.95];
-            const minGapMs = 2500; // минимальный зазор между бигами/супером
-            const minGapTicks = Math.ceil(minGapMs / CONFIG.game.spawnInterval);
-
-            superTick = randi(
-                Math.floor(totalTicks * superWin[0]),
-                Math.floor(totalTicks * superWin[1])
-            );
-
-            bigTicks.clear();
-            const want = CONFIG.elements.big.maxPerGame || 0;
-            const minT = Math.floor(totalTicks * bigWin[0]);
-            const maxT = Math.floor(totalTicks * bigWin[1]);
-
+            const superWin = [0.35, 0.85], bigWin = [0.15, 0.95], minGapMs = 2500, minGapTicks = Math.ceil(minGapMs / CONFIG.game.spawnInterval);
+            superTick = randi(Math.floor(totalTicks * superWin[0]), Math.floor(totalTicks * superWin[1]));
+            bigTicks.clear(); const want = CONFIG.elements.big.maxPerGame || 0; const minT = Math.floor(totalTicks * bigWin[0]); const maxT = Math.floor(totalTicks * bigWin[1]);
             while (bigTicks.size < want && (maxT - minT + 1) > 0) {
-                const t = randi(minT, maxT);
-                let ok = Math.abs(t - superTick) >= minGapTicks;
+                const t = randi(minT, maxT); let ok = Math.abs(t - superTick) >= minGapTicks;
                 if (ok) for (const bt of bigTicks) { if (Math.abs(t - bt) < minGapTicks) { ok = false; break; } }
                 if (ok) bigTicks.add(t);
             }
-
-            // --- ROMA окно появления (после 40% времени и до ~88%) ---
-            const romaWin = [0.40, 0.88];
-            const minGapTicksAll = Math.ceil(2500 / CONFIG.game.spawnInterval);
-            romaTick = randi(
-                Math.floor(totalTicks * romaWin[0]),
-                Math.floor(totalTicks * romaWin[1])
-            );
+            const romaWin = [0.40, 0.88]; const minGapTicksAll = Math.ceil(2500 / CONFIG.game.spawnInterval);
+            romaTick = randi(Math.floor(totalTicks * romaWin[0]), Math.floor(totalTicks * romaWin[1]));
             let tries = 40;
             while (tries-- > 0) {
                 let ok = Math.abs(romaTick - superTick) >= minGapTicksAll;
                 if (ok) for (const bt of bigTicks) { if (Math.abs(romaTick - bt) < minGapTicksAll) { ok = false; break; } }
                 if (ok) break;
-                romaTick = randi(
-                    Math.floor(totalTicks * romaWin[0]),
-                    Math.floor(totalTicks * romaWin[1])
-                );
+                romaTick = randi(Math.floor(totalTicks * romaWin[0]), Math.floor(totalTicks * romaWin[1]));
             }
         }
 
-        /* ========= Спавн ========= */
+        /* Спавн */
         function spawn() {
             if (!running) return;
             const E = CONFIG.elements;
-
-            // номер текущего тика
             const cur = tickNo++;
-
-            // --- ROMA по расписанию: один раз за раунд
-            if (E.roma?.maxPerGame && romaCount < (E.roma.maxPerGame || 1) && cur === romaTick) {
-                romaCount++; spawnRoma(); return;
-            }
-
-            // спец-объекты по расписанию
-            if (E.super.maxPerGame && superCount < (E.super.maxPerGame || 1) && cur === superTick) {
-                superCount++; spawnSuper(); return;
-            }
-            if (bigTicks.size && bigTicks.has(cur) && bigCount < (E.big.maxPerGame || 0)) {
-                bigCount++; spawnBig(); return;
-            }
-
-            // остальное — вероятностно
+            if (E.roma?.maxPerGame && romaCount < (E.roma.maxPerGame || 1) && cur === romaTick) { romaCount++; spawnRoma(); return; }
+            if (E.super.maxPerGame && superCount < (E.super.maxPerGame || 1) && cur === superTick) { superCount++; spawnSuper(); return; }
+            if (bigTicks.size && bigTicks.has(cur) && bigCount < (E.big.maxPerGame || 0)) { bigCount++; spawnBig(); return; }
             const r = Math.random();
             if (r < (E.bomb.chance || 0)) { spawnBomb(); return; }
             if (r < (E.bomb.chance || 0) + (E.tornado.chance || 0)) { spawnTornado(); return; }
             spawnNormal();
         }
 
-        /* ========= Сущности ========= */
+        /* Сущности */
         function spawnNormal() {
-            const n = makeNormal(); n.el.className = 'logo';
-            fallSetup(n.el, { allowEvade: n.allowEvade, allowSwim: n.allowSwim, size: n.size });
-            n.el.addEventListener('pointerdown', e => {
-                play(n.soundKey || 'hit'); vibr(CONFIG.vib.normal);
-                onHit(n.reward, zl(n.reward))(e);
-            }, { once: true });
+            const n = makeNormal(); n.el.className = 'logo'; fallSetup(n.el, { allowEvade: n.allowEvade, allowSwim: n.allowSwim, size: n.size });
+            n.el.addEventListener('pointerdown', e => { play(n.soundKey || 'hit'); vibr(CONFIG.vib.normal); onHit(n.reward, zl(n.reward))(e); }, { once: true });
         }
         function spawnSuper() {
-            const s = makeSuper(); s.el.className = 'super';
-            fallSetup(s.el, { allowEvade: s.allowEvade, allowSwim: s.allowSwim, size: s.size });
+            const s = makeSuper(); s.el.className = 'super'; fallSetup(s.el, { allowEvade: s.allowEvade, allowSwim: s.allowSwim, size: s.size });
             s.el.addEventListener('pointerdown', e => {
-                play(s.soundKey || 'hit'); vibr(CONFIG.vib.super + CRIT_VIB);
+                play(s.soundKey || 'hit');
+                vibr(CONFIG.vib.super + CRIT_VIB);      // оставили одну вибрацию
+                lightningFX(e.clientX, e.clientY);
                 onHit(s.reward, zl(s.reward))(e);
                 critCelebrate(e.clientX, e.clientY, '+' + zl(s.reward));
             }, { once: true });
         }
         function spawnBig() {
-            const b = makeBig(); b.el.className = 'big';
-            fallSetup(b.el, { allowEvade: b.allowEvade, allowSwim: b.allowSwim, size: b.size });
-            b.el.addEventListener('pointerdown', e => {
-                play(b.soundKey || 'hit'); vibr(CONFIG.vib.normal + 10);
-                onHit(b.reward, zl(b.reward))(e);
-            }, { once: true });
+            const b = makeBig(); b.el.className = 'big'; fallSetup(b.el, { allowEvade: b.allowEvade, allowSwim: b.allowSwim, size: b.size });
+            b.el.addEventListener('pointerdown', e => { play(b.soundKey || 'hit'); vibr(CONFIG.vib.normal + 10); onHit(b.reward, zl(b.reward))(e); }, { once: true });
         }
         function spawnBomb() {
-            const b = makeBomb(); if (!b.isImage) b.el.classList.add('bomb');
-            fallSetup(b.el, { allowEvade: b.allowEvade, allowSwim: b.allowSwim, size: b.size });
-            b.el.addEventListener('pointerdown', e => {
-                play(b.soundKey || 'bomb'); vibr(CONFIG.vib.bomb);
-                boom(e.clientX, e.clientY); shake(); onHit(b.reward, '')(e);
-            }, { once: true });
+            const b = makeBomb(); if (!b.isImage) b.el.classList.add('bomb'); fallSetup(b.el, { allowEvade: b.allowEvade, allowSwim: b.allowSwim, size: b.size });
+            b.el.addEventListener('pointerdown', e => { play(b.soundKey || 'bomb'); vibr(CONFIG.vib.bomb); boom(e.clientX, e.clientY); shake(); onHit(b.reward, '')(e); }, { once: true });
         }
         function spawnTornado() {
-            const t = makeTornado(); t.el.className = 'tornado';
-            fallSetup(t.el, { allowEvade: t.allowEvade, allowSwim: t.allowSwim, size: t.size });
-            t.el.addEventListener('pointerdown', e => {
-                play(t.soundKey || 'tornado'); vibr(CONFIG.elements.tornado.vibr);
-                twistBurst(e.clientX, e.clientY, 10); vortex(e.clientX, e.clientY); windGust();
-                pullNearby(e.clientX, e.clientY, CONFIG.elements.tornado.pull);
-                onHit(t.reward, '')(e);
-            }, { once: true });
+            const t = makeTornado(); t.el.className = 'tornado'; fallSetup(t.el, { allowEvade: t.allowEvade, allowSwim: t.allowSwim, size: t.size });
+            t.el.addEventListener('pointerdown', e => { play(t.soundKey || 'tornado'); vibr(CONFIG.elements.tornado.vibr); twistBurst(e.clientX, e.clientY, 10); vortex(e.clientX, e.clientY); windGust(); pullNearby(e.clientX, e.clientY, CONFIG.elements.tornado.pull); onHit(t.reward, '')(e); }, { once: true });
         }
         function spawnRoma() {
             const r = makeRoma(); r.el.className = 'roma';
-
-            // персональный диапазон падения ROMA
-            const frMin = CONFIG.elements.roma.fallMin || CONFIG.game.fallMin;
-            const frMax = CONFIG.elements.roma.fallMax || CONFIG.game.fallMax;
-            const dur = rand(frMin, frMax);
-
+            const frMin = CONFIG.elements.roma.fallMin || CONFIG.game.fallMin; const frMax = CONFIG.elements.roma.fallMax || CONFIG.game.fallMax; const dur = rand(frMin, frMax);
             fallSetup(r.el, { allowEvade: r.allowEvade, allowSwim: r.allowSwim, size: r.size, customDur: dur });
-
-            // новый FX + усиленные осколки
             r.el.addEventListener('pointerdown', e => {
                 play(r.soundKey || 'hit'); vibr([30, 50, 30]);
-                shardsBurst(e.clientX, e.clientY, 28);    // мощные осколки
-                romaPrismFX(e.clientX, e.clientY);        // призматический эффект
-                shake();                                   // тряска камеры
-                enterSlowmo(3000);                         // 3 сек слоумо
-                e.currentTarget.remove();
+                shardsBurst(e.clientX, e.clientY, 28); romaPrismFX(e.clientX, e.clientY); shake(); enterSlowmo(3000); e.currentTarget.remove();
             }, { once: true });
         }
 
-        /* === Притяжение к торнадо === */
+        /* Торнадо притяжение */
         function pullNearby(x, y, { radius = 220, strength = 60, dur = 620 } = {}) {
-            const start = performance.now();
-            const elems = Array.from(document.querySelectorAll('.logo,.super,.big'));
+            const start = performance.now(); const elems = Array.from(document.querySelectorAll('.logo,.super,.big'));
             const meta = elems.map(el => { const r = el.getBoundingClientRect(); return { el, w: r.width, h: r.height }; });
             function step(now) {
-                const t = Math.min(1, (now - start) / dur);
-                const ease = t < .5 ? (2 * t * t) : (-1 + (4 - 2 * t) * t);
+                const t = Math.min(1, (now - start) / dur); const ease = t < .5 ? (2 * t * t) : (-1 + (4 - 2 * t) * t);
                 meta.forEach(({ el, w }) => {
                     if (!el.isConnected) return;
                     const r = el.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2;
                     const dx = x - cx, dy = y - cy, dist = Math.hypot(dx, dy); if (dist > radius) return;
-                    const k = (1 - dist / radius) * strength * ease;
-                    const curLeft = parseFloat(el.style.left) || 0;
-                    const nx = curLeft + (dx / (dist || 1)) * k;
-                    el.style.left = clamp(nx, 0, app.clientWidth - w) + 'px';
-                    const curRot = parseFloat(getComputedStyle(el).getPropertyValue('--rot')) || 0;
-                    el.style.setProperty('--rot', (curRot + (dx > 0 ? 8 : -8) * ease) + 'deg');
+                    const k = (1 - dist / radius) * strength * ease; const curLeft = parseFloat(el.style.left) || 0;
+                    const nx = curLeft + (dx / (dist || 1)) * k; el.style.left = clamp(nx, 0, app.clientWidth - w) + 'px';
+                    const curRot = parseFloat(getComputedStyle(el).getPropertyValue('--rot')) || 0; el.style.setProperty('--rot', (curRot + (dx > 0 ? 8 : -8) * ease) + 'deg');
                 });
                 if (t < 1) requestAnimationFrame(step);
             }
             requestAnimationFrame(step);
         }
 
-        /* === Попадание === */
+        /* Попадание */
         function onHit(delta, label) {
             return e => {
                 if (!running) return;
                 discount += delta; update();
-                const p = { x: e?.clientX || 0, y: e?.clientY || 0 };
-                if (delta > 0) celebrate(p.x, p.y, '+' + label);
+                dEl.classList.add('rabat-glow'); setTimeout(() => dEl.classList.remove('rabat-glow'), 800);
+                const p = { x: e?.clientX || 0, y: e?.clientY || 0 }; if (delta > 0) celebrate(p.x, p.y, '+' + label);
                 e.currentTarget.remove();
             };
         }
 
-        /* === Таймер/раунд === */
-        function tick(now) {
-            const left = (CONFIG.game.duration - (now - t0)) / 1000;
-            tEl.textContent = Math.max(0, left).toFixed(1);
-            if (left > 0) requestAnimationFrame(tick); else endGame();
-        }
-        function clearField() {
-            document.querySelectorAll('.logo,.super,.big,.tornado,.bomb,.roma,.sheet,.ring,.confetti,.float,.boom,.crit-flash,.crit-burst,.crit-ray,.twist,.vortex').forEach(n => n.remove());
-        }
+        /* Таймер/игра */
+        function tick(now) { const left = (CONFIG.game.duration - (now - t0)) / 1000; tEl.textContent = Math.max(0, left).toFixed(1); if (left > 0) requestAnimationFrame(tick); else endGame(); }
+        function clearField() { document.querySelectorAll('.logo,.super,.big,.tornado,.bomb,.roma,.sheet,.ring,.confetti,.float,.boom,.crit-flash,.crit-burst,.crit-ray,.twist,.vortex').forEach(n => n.remove()); }
+
         function startGame() {
+            try { navigator.vibrate?.(40); } catch { }
             running = false; if (spawnTimer) clearInterval(spawnTimer);
             clearField(); discount = 0; superCount = 0; bigCount = 0; romaCount = 0; exitSlowmo(); update();
             startOv.style.display = 'none';
-
-            // план на раунд
-            tickNo = 0;
-            planSpecials();
-
-            running = true; t0 = performance.now();
-            spawnTimer = setInterval(spawn, CONFIG.game.spawnInterval);
+            tickNo = 0; planSpecials();
+            running = true; t0 = performance.now(); spawnTimer = setInterval(spawn, CONFIG.game.spawnInterval);
             if (CONFIG.sounds.enabled && bgMusic) { try { bgMusic.currentTime = 0; bgMusic.play(); } catch { } }
             requestAnimationFrame(tick);
         }
 
-        /* === Конец игры + Таблица лидеров === */
         function endGame() {
             running = false; clearInterval(spawnTimer);
             const final = Math.round(discount);
             const s = document.createElement('div'); s.className = 'sheet';
             const currentLB = loadScores();
 
+            totalGames += 1;
+            localStorage.setItem(LS_KEYS.total, String(totalGames));
+            renderTotalGames();                     // <- добавили обновление счётчика
+
             s.innerHTML =
                 `<div style="text-align:center">
-                    <h2>Koniec!</h2>
-                    <p>Twój rabat: <b>${zl(final)}</b></p>
-                    <p style="opacity:.9;margin-top:12px">Zrób zrzut ekranu i <b>wyślij nam w wiadomości</b>.</p>
+          <h2>Koniec!</h2>
+          <p>Twój rabat: <b>${zl(final)}</b></p>
+          <p style="opacity:.9;margin-top:12px">Zrób zrzut ekranu i <b>wyślij nam w wiadomości</b>.</p>
 
+          <div style="margin:12px 0 6px">
+            <input id="lbName" type="text" maxlength="16" placeholder="Twoje imię"
+                   style="width:220px; padding:10px 12px; border-radius:10px; border:1px solid #333; background:#0f0f0f; color:#fff; font-weight:700"/>
+            <button class="btn" id="saveScore" style="margin-left:8px">Zapisz</button>
+            <p style="opacity:.9;margin-top:12px">Max 3 osoby.</p>
+          </div>
 
-                    <div style="margin:12px 0 6px">
-                      <input id="lbName" type="text" maxlength="16" placeholder="Twoje imię"
-                             style="width: 220px; padding:10px 12px; border-radius:10px; border:1px solid #333; background:#0f0f0f; color:#fff; font-weight:700"/>
-                      <button class="btn" id="saveScore" style="margin-left:8px">Zapisz</button>
-                      <p style="opacity:.9;margin-top:12px">Max 5 osób</b>.</p>
-                    </div>
+          <div id="lbBox">${renderLeaderboardHTML(currentLB)}</div>
 
-                    <div id="lbBox">${renderLeaderboardHTML(currentLB)}</div>
-
-                    <br>
-                    <button class="btn" id="again">Jeszcze raz</button>
-                 </div>`;
+          <br>
+          <button class="btn" id="again">Jeszcze raz</button>
+        </div>`;
 
             document.body.appendChild(s);
-
             s.querySelector('#saveScore').onclick = () => {
                 const name = s.querySelector('#lbName').value.trim() || 'Gość';
                 const top = saveScore(name, final);
