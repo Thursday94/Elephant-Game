@@ -65,43 +65,72 @@
             }
         }
 
-        .safe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            padding: 14px;
-            padding-top: calc(env(safe-area-inset-top) + 14px);
-            display: flex;
-            justify-content: space-between;
-            z-index: 5;
-            font-weight: 700;
-        }
+.safe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 14px;
+  padding-top: calc(env(safe-area-inset-top) + 14px);
+  display: flex;
+  justify-content: space-between;
+  z-index: 5;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.5px;
+}
 
-        .pill {
-            background: rgba(0, 0, 0, .45);
-            border: 1px solid #333;
-            border-radius: 999px;
-            padding: 6px 12px;
-            box-shadow: 0 0 12px rgba(0, 0, 0, .35);
-        }
+.pill {
+  background: rgba(255, 215, 179, 0.18);
+  border: 1px solid rgba(255, 215, 179, 0.45);
+  border-radius: 999px;
+  padding: 10px 20px;                /* больше внутренний отступ */
+  font-size: 1.1rem;                 /* крупнее шрифт */
+  color: #ffd7b3;
+  font-weight: 600;
+  box-shadow:
+    0 0 14px rgba(255, 215, 179, 0.12),
+    inset 0 0 12px rgba(255, 215, 179, 0.07);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: all 0.25s ease;
+}
 
-        .sheet {
-            animation: slideUp .35s ease-out;
-            box-shadow: 0 -6px 25px rgba(0, 0, 0, .7), 0 -2px 12px rgba(255, 215, 179, .28);
-        }
+.pill:hover {
+  background: rgba(255, 215, 179, 0.28);
+  box-shadow:
+    0 0 16px rgba(255, 215, 179, 0.3),
+    inset 0 0 10px rgba(255, 215, 179, 0.2);
+  transform: scale(1.05);
+}
 
-        @keyframes slideUp {
-            from {
-                transform: translateY(40px);
-                opacity: 0
-            }
 
-            to {
-                transform: translateY(0);
-                opacity: 1
-            }
-        }
+.sheet {
+  animation: slideUp 0.45s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  box-shadow:
+    0 -6px 25px rgba(0, 0, 0, 0.6),
+    0 -2px 12px rgba(255, 215, 179, 0.25);
+  border-radius: 16px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  background: rgba(0, 0, 0, 0.7);
+  position: absolute;
+  z-index: 10;
+}
+@keyframes slideUp {
+  0% {
+    transform: translateY(60px) scale(0.97);
+    opacity: 0;
+  }
+  60% {
+    transform: translateY(-4px) scale(1.02);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0) scale(1);
+  }
+}
+
 
         /* ⚡ Электрическая вспышка */
         .lightning-burst {
@@ -225,7 +254,7 @@
         }
 
         .overlay {
-            backdrop-filter: blur(3px);
+            backdrop-filter: blur(2px);
         }
 
         .bomb {
@@ -233,7 +262,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            filter: drop-shadow(0 10px 14px rgba(0, 0, 0, .65));
+            filter: drop-shadow(0 12px 16px rgba(0, 0, 0, .75));
         }
 
         @keyframes fall {
@@ -265,8 +294,8 @@
         }
 
         .logo {
-            width: 96px;
-            height: 96px;
+            width: 110px;
+            height: 110px;
         }
 
         .big {
@@ -292,13 +321,20 @@
         }
 
         .btn {
-            background: var(--brand);
-            border: none;
-            border-radius: 999px;
-            padding: 12px 24px;
-            font-weight: 800;
-            cursor: pointer;
-        }
+  background: rgba(255,215,179,.15);
+  border: 1px solid rgba(255,215,179,.45);
+  color: #ffd7b3;
+  border-radius: 999px;
+  padding: 10px 28px;
+  letter-spacing: .5px;
+  transition: all .25s ease;
+  backdrop-filter: blur(8px);
+}
+.btn:hover {
+  background: rgba(255,215,179,.25);
+  box-shadow: 0 0 20px rgba(255,215,179,.35);
+  transform: scale(1.05);
+}
 
         .sheet {
             position: absolute;
@@ -311,18 +347,24 @@
             border-top-right-radius: 18px;
             z-index: 20;
             box-shadow: 0 -12px 30px rgba(0, 0, 0, .4);
+            animation: slideUpFade .5s ease-out;
         }
+
+        @keyframes slideUpFade {
+  from { opacity: 0; transform: translateY(30px) scale(0.90); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
 
         .ring {
             position: absolute;
             width: 14px;
             height: 14px;
-            border: 3px solid var(--brand);
+            border: 20px solid var(--brand);
             border-radius: 999px;
             pointer-events: none;
             opacity: .9;
             transform: translate(-50%, -50%) scale(.3);
-            animation: ring .5s ease-out forwards;
+            animation: ring 1.5s ease-out forwards;
         }
 
         @keyframes ring {
@@ -347,7 +389,7 @@
         @keyframes floatUp {
             0% {
                 opacity: 0;
-                transform: translate(-50%, -30%) scale(.6)
+                transform: translate(-50%, -30%) scale(1.4)
             }
 
             20% {
@@ -360,21 +402,27 @@
             }
         }
 
-        .confetti {
-            position: absolute;
-            width: 10px;
-            height: 12px;
-            border-radius: 5px;
-            pointer-events: none;
-            animation: confDrop 1.2s ease-out forwards;
-        }
+.confetti {
+  position: absolute;
+  width: 10px;
+  height: 14px;
+  border-radius: 4px;
+  pointer-events: none;
+  opacity: 0.9;
+  animation: confDrop 1.2s cubic-bezier(0.33, 1, 0.68, 1);
+}
 
-        @keyframes confDrop {
-            to {
-                transform: translate(var(--dx), var(--dy)) rotate(var(--rot));
-                opacity: 0;
-            }
-        }
+@keyframes confDrop {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--dx), var(--dy)) rotate(var(--rot));
+    opacity: 0;
+  }
+}
+
 
         .boom {
             position: absolute;
@@ -383,7 +431,7 @@
             border-radius: 70%;
             pointer-events: none;
             background: radial-gradient(circle, rgba(255, 220, 150, .95) 0%, rgba(255, 120, 0, .7) 45%, rgba(0, 0, 0, 0) 70%);
-            transform: translate(-50%, -50%) scale(.5);
+            transform: translate(-50%, -50%) scale(1.5);
             opacity: .95;
             box-shadow: 0 0 20px rgba(255, 140, 0, .8), 0 0 40px rgba(255, 100, 0, .6);
             animation: boom 1s ease-out forwards;
@@ -402,7 +450,7 @@
         }
 
         .shake {
-            animation: shake 450ms cubic-bezier(.36, .07, .19, .97);
+            animation: shake 850ms cubic-bezier(.36, .07, .19, .97);
         }
 
         @keyframes shake {
@@ -429,71 +477,82 @@
             }
         }
 
-        .rabat-glow {
-            animation: rabatGlow .8s ease-out forwards;
-        }
+.rabat-glow {
+  animation: rabatGlow 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
 
-        @keyframes rabatGlow {
-            0% {
-                color: #fff;
-                text-shadow: 0 0 2px #ffd7b3
-            }
+@keyframes rabatGlow {
+  0% {
+    color: #fff;
+    text-shadow: 0 0 2px #ffd7b3, 0 0 8px rgba(255, 215, 179, 0.5);
+  }
+  35% {
+    color: #ffd7b3;
+    text-shadow:
+      0 0 6px #ffd7b3,
+      0 0 18px #ffe5c6,
+      0 0 32px rgba(255, 215, 179, 0.3);
+  }
+  70% {
+    color: #ffe5c6;
+    text-shadow:
+      0 0 10px #ffd7b3,
+      0 0 28px rgba(255, 215, 179, 0.5);
+  }
+  100% {
+    color: #fff;
+    text-shadow: none;
+  }
+}
 
-            40% {
-                color: #ffd7b3;
-                text-shadow: 0 0 18px #ffe5c6
-            }
 
-            100% {
-                color: #fff;
-                text-shadow: none
-            }
-        }
+.wind {
+  animation: wind 0.55s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+}
 
-        .wind {
-            animation: wind .45s ease-in-out;
-        }
+@keyframes wind {
+  0% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-8px) rotate(-1deg);
+  }
+  45% {
+    transform: translateX(6px) rotate(1deg);
+  }
+  70% {
+    transform: translateX(-4px) rotate(-0.5deg);
+  }
+  100% {
+    transform: translateX(0) rotate(0deg);
+  }
+}
 
-        @keyframes wind {
-            0% {
-                transform: translateX(0)
-            }
 
-            25% {
-                transform: translateX(-6px)
-            }
+.crit-flash {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9;
+  /* два слоя: тёплый центр + лёгкая виньетка по краям */
+  background:
+    radial-gradient(circle at 50% 50%,
+      rgba(255,215,179,.25) 0%,
+      rgba(255,215,179,.12) 35%,
+      rgba(255,215,179,0) 70%),
+    radial-gradient(circle at 50% 50%,
+      rgba(0,0,0,.0) 60%,
+      rgba(0,0,0,.25) 100%);
+  animation: critFlash 1.1s cubic-bezier(.25,1,.5,1) forwards;
+  will-change: opacity, transform;
+}
 
-            50% {
-                transform: translateX(6px)
-            }
+@keyframes critFlash {
+  0%   { opacity:.95; transform: scale(1.02); }
+  60%  { opacity:.35; transform: scale(1.00); }
+  100% { opacity:0;   transform: scale(1.00); }
+}
 
-            75% {
-                transform: translateX(-3px)
-            }
-
-            100% {
-                transform: translateX(0)
-            }
-        }
-
-        .crit-flash {
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(circle, rgba(255, 255, 255, .14), rgba(255, 255, 255, 0) 60%);
-            pointer-events: none;
-            animation: critFlash .35s ease-out forwards;
-            z-index: 9;
-        }
-
-        @keyframes critFlash {
-            from {
-                opacity: .9
-            }
-
-            to {
-                opacity: 0
-            }
-        }
 
         .crit-burst {
             position: absolute;
@@ -677,8 +736,8 @@
         .roma {
             position: absolute;
             top: -80px;
-            width: 84px;
-            height: 84px;
+            width: 100px;
+            height: 100px;
             object-fit: contain;
             cursor: pointer;
             user-select: none;
@@ -711,114 +770,196 @@
         }
 
         /* PRISM FX */
-        .prism-core {
-            position: absolute;
-            left: 0;
-            top: 0;
-            transform: translate(-50%, -50%) scale(.6);
-            width: 90px;
-            height: 90px;
-            border-radius: 50%;
-            background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, .95) 0%, rgba(255, 255, 255, 0) 55%), conic-gradient(from 0deg, #ffd7b3, #ffd700, #ff8a00, #ff4d4d, #b36bff, #66d9ff, #ffd7b3);
-            box-shadow: 0 0 24px rgba(255, 215, 179, .9), 0 0 60px rgba(255, 215, 0, .45);
-            pointer-events: none;
-            z-index: 9;
-            animation: prismPulse .9s ease-out forwards, prismSpin 1.4s linear;
-        }
+.prism-core {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translate(-50%, -50%) scale(0.6);
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9;
+  background:
+    radial-gradient(circle at 50% 50%,
+      rgba(255, 255, 255, 0.95) 0%,
+      rgba(255, 255, 255, 0.0) 55%),
+    conic-gradient(from 0deg,
+      rgba(255, 215, 179, 0.8),
+      rgba(255, 230, 200, 0.3),
+      rgba(255, 215, 179, 0.8),
+      rgba(255, 255, 255, 0.6),
+      rgba(255, 215, 179, 0.8));
+  box-shadow:
+    0 0 24px rgba(255, 215, 179, 0.8),
+    0 0 60px rgba(255, 215, 179, 0.4);
+  filter: blur(0.5px) saturate(1.2);
+  animation:
+    prismPulse 1.1s ease-out forwards,
+    prismSpin 2.4s linear infinite;
+}
 
-        @keyframes prismPulse {
-            60% {
-                transform: translate(-50%, -50%) scale(1.4);
-                opacity: .95
-            }
+@keyframes prismPulse {
+  0% {
+    transform: translate(-50%, -50%) scale(0.6);
+    opacity: 0.9;
+  }
+  60% {
+    transform: translate(-50%, -50%) scale(1.4);
+    opacity: 0.95;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1.6);
+    opacity: 0;
+  }
+}
 
-            100% {
-                transform: translate(-50%, -50%) scale(1.6);
-                opacity: 0
-            }
-        }
+/* мягкое вращение конусного градиента */
+@keyframes prismSpin {
+  0% { transform: translate(-50%, -50%) scale(0.6) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) scale(0.6) rotate(360deg); }
+}
 
-        @keyframes prismSpin {
-            to {
-                filter: hue-rotate(360deg)
-            }
-        }
 
         .prism-shard {
-            position: absolute;
-            left: 0;
-            top: 0;
-            transform: translate(-50%, -50%);
-            width: 10px;
-            height: 18px;
-            border-radius: 2px;
-            background: linear-gradient(180deg, rgba(255, 255, 255, .95), rgba(255, 255, 255, 0));
-            box-shadow: 0 0 14px rgba(255, 255, 255, .65);
-            pointer-events: none;
-            z-index: 9;
-            animation: shardFly .9s ease-out forwards;
-        }
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translate(-50%, -50%) rotate(var(--rot)) scale(1);
+  width: 10px;
+  height: 18px;
+  border-radius: 2px;
+  background: linear-gradient(180deg,
+    rgba(255, 215, 179, 0.95) 0%,
+    rgba(255, 235, 210, 0.6) 40%,
+    rgba(255, 255, 255, 0) 100%);
+  box-shadow:
+    0 0 8px rgba(255, 215, 179, 0.6),
+    0 0 18px rgba(255, 215, 179, 0.35);
+  pointer-events: none;
+  z-index: 9;
+  opacity: 0.9;
+  filter: blur(0.3px);
+  animation: shardFly 0.9s ease-out forwards;
+}
 
-        @keyframes shardFly {
-            75% {
-                transform: translate(var(--dx), var(--dy)) rotate(var(--rot)) scale(1.2);
-                opacity: .9
-            }
+@keyframes shardFly {
+  0% {
+    transform: translate(-50%, -50%) rotate(var(--rot)) scale(0.8);
+    opacity: 1;
+  }
+  60% {
+    transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) rotate(calc(var(--rot) + 40deg)) scale(1.2);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate(calc(-50% + var(--dx) * 1.4), calc(-50% + var(--dy) * 1.4)) rotate(calc(var(--rot) + 80deg)) scale(0.9);
+    opacity: 0;
+  }
+}
 
-            100% {
-                transform: translate(calc(var(--dx)*1.25), calc(var(--dy)*1.25)) rotate(var(--rot)) scale(1.2);
-                opacity: 0
-            }
-        }
+        /* универсальные переменные под эффект */
+:root {
+  --halo-size: 120px;
+  --halo-color: #ffd7b3;            /* фирменный крафт */
+  --halo-glow: rgba(255,215,179,.75);
+}
 
-        .prism-halo {
-            position: absolute;
-            left: 0;
-            top: 0;
-            transform: translate(-50%, -50%) scale(.5);
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            border: 3px solid rgba(255, 215, 179, .9);
-            box-shadow: 0 0 30px rgba(255, 215, 179, .8), 0 0 60px rgba(255, 215, 0, .35);
-            pointer-events: none;
-            z-index: 8;
-            animation: haloExpand .8s ease-out forwards;
-        }
+.prism-halo {
+  position: absolute;
+  left: 0; top: 0;
+  width: var(--halo-size);
+  height: var(--halo-size);
+  transform: translate(-50%, -50%) scale(.55);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 8;
+  /* кольцо + лёгкая призменная окантовка через conic-gradient */
+  background:
+    radial-gradient(circle, rgba(255,255,255,.12) 0 55%, transparent 60%),
+    conic-gradient(from 0deg,
+      rgba(255,215,179,.7),
+      rgba(255,235,210,.35),
+      rgba(255,215,179,.7),
+      rgba(255,255,255,.5),
+      rgba(255,215,179,.7));
+  /* мягкое свечение вокруг */
+  box-shadow:
+    0 0 26px var(--halo-glow),
+    0 0 60px rgba(255,215,179,.35);
+  animation: haloExpand .85s cubic-bezier(.25,1,.5,1) forwards;
+  will-change: transform, opacity;
+}
 
-        @keyframes haloExpand {
-            70% {
-                transform: translate(-50%, -50%) scale(2.4);
-                opacity: .8
-            }
+@keyframes haloExpand {
+  0%   { transform: translate(-50%, -50%) scale(.55); opacity:.95; }
+  65%  { transform: translate(-50%, -50%) scale(2.3); opacity:.8; }
+  100% { transform: translate(-50%, -50%) scale(2.6); opacity:0; }
+}
 
-            100% {
-                transform: translate(-50%, -50%) scale(2.6);
-                opacity: 0
-            }
-        }
+/* опционально: тонкое внешнее кольцо-ударная волна */
+.prism-halo::after {
+  content:"";
+  position:absolute; inset:0;
+  border-radius:50%;
+  background:
+    radial-gradient(circle,
+      rgba(255,215,179,.55) 0 2px,
+      transparent 3px);
+  transform: scale(.2);
+  opacity:.9;
+  animation: haloRing .8s ease-out forwards;
+}
 
-        .prism-trail {
-            position: absolute;
-            left: 0;
-            top: 0;
-            transform: translate(-50%, -50%);
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: radial-gradient(circle, #fff, rgba(255, 255, 255, 0));
-            box-shadow: 0 0 10px #fff;
-            pointer-events: none;
-            z-index: 8;
-            animation: trailFade .6s ease-out forwards;
-        }
+@keyframes haloRing {
+  0%   { transform: scale(.2); opacity:.9; filter: blur(0); }
+  70%  { transform: scale(2.6); opacity:.45; filter: blur(.5px); }
+  100% { transform: scale(3);   opacity:0;   filter: blur(1px); }
+}
 
-        @keyframes trailFade {
-            100% {
-                transform: translate(var(--dx), var(--dy));
-                opacity: 0
-            }
-        }
+/* уважение к prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .prism-halo, .prism-halo::after { animation: none; opacity:.8; }
+}
+
+
+.prism-trail {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translate(-50%, -50%);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: radial-gradient(circle,
+    rgba(255, 215, 179, 0.95) 0%,
+    rgba(255, 235, 210, 0.5) 40%,
+    rgba(255, 255, 255, 0) 100%);
+  box-shadow:
+    0 0 10px rgba(255, 215, 179, 0.7),
+    0 0 20px rgba(255, 215, 179, 0.35);
+  pointer-events: none;
+  z-index: 8;
+  opacity: 0.9;
+  filter: blur(0.4px);
+  animation: trailFade 0.65s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+@keyframes trailFade {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.9;
+  }
+  50% {
+    opacity: 0.5;
+    transform: translate(calc(var(--dx) * 0.5), calc(var(--dy) * 0.5)) scale(1.1);
+  }
+  100% {
+    transform: translate(var(--dx), var(--dy)) scale(1.3);
+    opacity: 0;
+  }
+}
+
 
         .totalGames-pop {
             animation: tgPop .45s ease-out forwards;
@@ -842,24 +983,460 @@
         }
 
         .app.slowmo .freeze-vignette {
-            content: "";
-            position: absolute;
-            inset: 0;
-            pointer-events: none;
-            z-index: 10;
-            background: radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 0) 55%, rgba(0, 0, 0, .28) 100%);
-            animation: vignetteBlink .25s ease-out;
-        }
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 10;
+  background:
+    radial-gradient(circle at 50% 50%,
+      rgba(0, 0, 0, 0) 45%,
+      rgba(0, 0, 0, 0.25) 75%,
+      rgba(0, 0, 0, 0.4) 100%),
+    radial-gradient(circle at 50% 50%,
+      rgba(255, 215, 179, 0.05) 0%,
+      rgba(0, 0, 0, 0) 60%);
+  animation:
+    vignetteBlink 0.35s cubic-bezier(0.25, 1, 0.5, 1),
+    vignettePulse 2s ease-in-out infinite alternate;
+  opacity: 0.9;
+  mix-blend-mode: multiply;
+}
 
-        @keyframes vignetteBlink {
-            from {
-                opacity: 0
-            }
+@keyframes vignetteBlink {
+  from {
+    opacity: 0;
+    filter: blur(2px);
+  }
+  to {
+    opacity: 0.9;
+    filter: blur(0);
+  }
+}
 
-            to {
-                opacity: 1
-            }
-        }
+/* лёгкое "дыхание" для живости эффекта */
+@keyframes vignettePulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(1.02);
+    opacity: 0.92;
+  }
+}
+
+/* лёгкая тряска */
+@keyframes endShake {
+  0%,100% { transform: translate(0,0); }
+  25% { transform: translate(3px,-2px); }
+  50% { transform: translate(-3px,2px); }
+  75% { transform: translate(2px,3px); }
+}
+
+/* мягкая тёплая вспышка поверх сцены */
+@keyframes endFlash {
+  0%   { opacity:.9; transform: scale(1.02); }
+  70%  { opacity:.35; transform: scale(1); }
+  100% { opacity:0;   transform: scale(1); }
+}
+
+/* триггерим обоё сразу, когда на .app вешается класс end-wow */
+.app.end-wow { animation: endShake .22s ease; }
+.app.end-wow::before{
+  content:"";
+  position:absolute; inset:0; pointer-events:none;
+  background:
+    radial-gradient(circle at 50% 50%,
+      rgba(255,215,179,.25) 0%,
+      rgba(255,215,179,.12) 35%,
+      rgba(255,215,179,0) 70%);
+  animation: endFlash .9s cubic-bezier(.25,1,.5,1) forwards;
+  z-index: 9; /* .sheet поставь z-index:10, чтобы была выше */
+}
+
+/* на всякий случай: контейнер позиционирован */
+.app { position: relative; }
+.sheet { position: absolute; z-index: 10; }
+
+@keyframes coffeeSteam {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 20px) scale(0.9);
+  }
+  10% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -80px) scale(1.2);
+  }
+}
+
+/* базовый стиль для «пара» */
+.coffee-steam {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 60px;
+  height: 120px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 80%, rgba(255, 215, 179, 0.25), rgba(255, 215, 179, 0));
+  filter: blur(12px);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 8;
+  transform: translate(-50%, 0);
+  animation: coffeeSteam 2.2s ease-out forwards;
+}
+
+.rabat-glow-final {
+  color: #ffe8cc;
+  animation: finalGlow 1s ease-in-out infinite alternate;
+}
+@keyframes finalGlow {
+  from {
+    text-shadow:
+      0 0 8px rgba(255,215,179,.4),
+      0 0 15px rgba(255,215,179,.25);
+  }
+  to {
+    text-shadow:
+      0 0 20px rgba(255,215,179,1),
+      0 0 40px rgba(255,215,179,.9),
+      0 0 60px rgba(255,200,150,.7);
+  }
+}
+
+@keyframes elephantSteam {
+  0%   { opacity: 0; transform: translate(-50%, -10px) scale(.9);   filter: blur(6px); }
+  15%  { opacity: .9;  transform: translate(-50%, -20px) scale(1);  filter: blur(2px); }
+  100% { opacity: 0;   transform: translate(-50%, -90px) scale(1.15); filter: blur(8px); }
+}
+.steam-elephant {
+  position: absolute;
+  left: 50%; top: 50%;
+  transform: translate(-50%, 0);
+  width: 72px; height: 72px;
+  pointer-events: none;
+  z-index: 8;
+  animation: elephantSteam 2.4s ease-out forwards;
+  mix-blend-mode: screen;           /* мягче на тёмном фоне */
+  opacity: 0;
+}
+.steam-elephant svg {
+  width: 100%; height: 100%;
+  fill: rgba(255, 215, 179, .85);   /* #ffd7b3 */
+}
+
+.btn#again{transition:transform .2s ease, box-shadow .2s ease}
+.btn#again:hover{transform:translateY(-2px);box-shadow:0 10px 20px rgba(255,215,179,.25)}
+
+/* --- МОДАЛКА ELEPHANT COFFEE --- */
+
+#startOv .modal {
+    padding: 32px 38px;
+    border-radius: 24px;
+
+    /* тёплый кофейный фон вместо черного */
+    background: rgba(40, 25, 15, 0.55);
+    /* можно ярче → rgba(55, 38, 25, 0.58) */
+    /* или мягче → rgba(45, 30, 20, 0.48) */
+
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+
+    box-shadow:
+        0 10px 35px rgba(0,0,0,0.45),
+        0 0 40px rgba(255,215,179,0.18);
+
+    animation: modalEnter .6s ease-out;
+}
+
+
+/* Плавное появление модалки */
+@keyframes modalEnter {
+    from {
+        opacity: 0;
+        transform: translateY(22px) scale(0.97);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Заголовок */
+#startOv .modal h1 {
+    text-align: center;
+    margin-bottom: 12px;
+    font-size: 32px !important;
+    font-weight: 900;
+    color: transparent;
+    background: linear-gradient(90deg, #ffd7b3, #ffe9c8);
+    -webkit-background-clip: text;
+            background-clip: text;
+    text-shadow: 0 0 22px rgba(255,215,179,.35);
+}
+
+/* Все параграфы */
+#startOv .modal p {
+    color: #fff;
+    font-size: 17px !important;
+    line-height: 1.55 !important;
+    margin: 10px 0 !important;
+    opacity: .95;
+    text-shadow: 0 2px 8px rgba(0,0,0,.55);
+}
+
+/* Иконки 🫘 🐘 светятся мягким светом */
+#startOv .modal p span,
+#startOv .modal p img {
+    filter: drop-shadow(0 0 4px rgba(255,215,179,.75));
+}
+
+/* Акцентные правила (последний p с id=rulesText) */
+#rulesText {
+    font-size: 16px !important;
+    color: #ffe7d0 !important;
+    margin-top: 12px !important;
+}
+#rulesText::before {
+    content: "• ";
+    color: #ffd7b3;
+    font-size: 20px;
+    vertical-align: middle;
+}
+
+/* Кнопка старт */
+#startOv .btn#start {
+    margin-top: 16px;
+    padding: 10px 26px;
+    font-size: 18px;
+    font-weight: 700;
+
+    background: linear-gradient(90deg, #ffd7b3, #ffebb9);
+    border: none;
+    color: #000;
+    border-radius: 14px;
+
+    transition: transform .2s ease, box-shadow .2s ease;
+    box-shadow: 0 4px 14px rgba(255,215,179,.35);
+}
+
+#startOv .btn#start:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 22px rgba(255,215,179,.45);
+}
+
+.rules-info {
+    margin-top: 18px;
+    line-height: 1.55;
+    font-size: 16px;
+    opacity: .82;
+    color: #fff;
+    text-align: left;
+    max-width: 420px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* общий отступ секций внутри модалки */
+.modal-section {
+  margin-top: 18px;
+}
+
+/* маленький подзаголовок секции */
+.section-title {
+  font-size: 15px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: rgba(255, 231, 208, .9);
+  margin: 0 0 6px;
+}
+
+/* коробка с правилами */
+.rules-box {
+  text-align: left;
+}
+
+/* список правил */
+.rules-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.rules-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  margin: 4px 0;
+  color: #fff;
+  font-size: 15px;
+  line-height: 1.5;
+  text-shadow: 0 2px 6px rgba(0,0,0,.6);
+}
+
+/* иконка-гвоздик */
+.rules-list .pin {
+  flex: 0 0 auto;
+  margin-top: 2px;
+  filter: drop-shadow(0 0 6px rgba(255, 215, 179, .7));
+}
+
+/* блок с очками за элементы */
+.game-box {
+  text-align: center;
+  margin-top: 20px;
+}
+
+/* список очков */
+.game-list {
+  list-style: none;
+  padding: 0;
+  margin: 4px 0 0;
+  color: #ffe9d5;
+  font-size: 15px;
+  line-height: 1.5;
+  text-shadow: 0 2px 6px rgba(0,0,0,.6);
+}
+
+.game-list li {
+  margin: 3px 0;
+}
+
+/* позитивные значения */
+.game-list b {
+  color: #ffd7b3;
+}
+
+/* минуса — слегка красные */
+.game-list b.minus {
+  color: #ff8a7a;
+}
+
+/* иконка бомбы */
+.bomb-icon {
+  filter: drop-shadow(0 0 6px rgba(255, 120, 120, .8));
+}
+
+/* 📱 Mobile optimization */
+@media (max-width: 480px) {
+
+  /* сама модалка — делаем более компактной */
+  .modal {
+    padding: 18px 20px !important;
+  }
+
+  /* заголовок */
+  h1.title-anim {
+    font-size: 24px !important;
+    line-height: 1.25;
+    margin-bottom: 10px;
+  }
+
+  /* подзаголовки секций */
+  .section-title {
+    font-size: 13px;
+    margin-bottom: 4px;
+    text-align: center;
+    letter-spacing: 0.06em;
+  }
+
+  /* список правил */
+  .rules-list li {
+    font-size: 14px;
+    line-height: 1.45;
+    margin: 6px 0;
+  }
+
+  /* уменьшить смещение иконок */
+  .rules-list .pin {
+    margin-top: 1px;
+  }
+
+  /* блок правил */
+  .rules-box {
+    margin-top: 14px;
+  }
+
+  /* блок с ценами за элементы */
+  .game-box {
+    margin-top: 16px;
+  }
+
+  .game-list li {
+    font-size: 14px;
+    margin: 4px 0;
+  }
+
+  /* кнопка "Graj!" — крупнее, пальцем удобно нажать */
+  .btn#start,
+  .btn#again {
+    padding: 14px 24px !important;
+    font-size: 17px !important;
+    border-radius: 14px !important;
+    margin-top: 12px;
+  }
+
+  /* сколько игр сыграно */
+  #totalGamesInfo {
+    font-size: 13px;
+    margin-top: 10px !important;
+  }
+}
+
+/* Общий стиль блока с наградами (rulesText) */
+#rulesText {
+  margin-top: 16px;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #ffe9d5;
+  text-align: center;
+  text-shadow: 0 2px 6px rgba(0,0,0,.65);
+}
+
+/* все значения в <b> делаем тёплыми и «живыми» */
+#rulesText b {
+  color: #ffe5c6;
+  text-shadow: 0 0 6px rgba(255,215,179,.55);
+  display: inline-block;
+  transition: transform .18s ease, text-shadow .18s ease;
+}
+
+/* лёгкий подъём при наведении на строку */
+#rulesText b:hover {
+  transform: scale(1.06);
+  text-shadow: 0 0 14px rgba(255,215,179,.9);
+}
+
+/* 4-й и 5-й <b> — минусовые значения */
+#rulesText b:nth-of-type(4),
+#rulesText b:nth-of-type(5) {
+  color: #ffb3b3;
+  text-shadow: 0 0 10px rgba(255,80,80,.55);
+}
+
+/* 6-й <b> — «3 sekundy» */
+#rulesText b:nth-of-type(6) {
+  font-weight: 700;
+  color: #ffffff;
+  text-shadow: 0 0 10px rgba(255,255,255,.6);
+}
+
+#rulesText {
+  opacity: 0;
+  transform: translateY(8px) scale(.97);
+  animation: rulesIn .45s ease-out .25s forwards;
+}
+
+@keyframes rulesIn {
+  0%   { opacity: 0; transform: translateY(10px) scale(.04); }
+  100% { opacity: 1; transform: translateY(0)    scale(1);   }
+}
+
+
     </style>
 </head>
 
@@ -871,16 +1448,59 @@
         </div>
         <div class="overlay" id="startOv">
             <div class="modal">
-                <h1 class="title-anim"
-                    style="font-size:32px;font-weight:900;background:linear-gradient(90deg,#ffd7b3,#ffe9c8);-webkit-background-clip:text;color:transparent;text-shadow:0 2px 8px rgba(0,0,0,.45);">
-                    Gra od Elephant Coffee — ZŁAP SŁONIA 🐘
-                </h1><br><br>
-                <p style="opacity:.9;line-height:1.4;font-size:18px;">
-                    Cześć! Gra jest w wersji testowej — nagrody będą aktywne po oficjalnym starcie 🫶
-                </p>
-                <p style="opacity:.9;line-height:1.4" id="rulesText"></p>
-                <button class="btn" id="start">Graj!</button>
-                <p id="totalGamesInfo" class="text-muted" style="margin-top:8px">Twoje rozegrane gry: 0</p>
+<h1 class="title-anim">
+    Gra od Elephant Coffee — ZŁAP SŁONIA 🐘
+</h1>
+
+<div class="modal-section rules-box">
+    <h2 class="section-title">Zasady rabatu:</h2>
+    <ul class="rules-list">
+        <li>
+            <span class="pin">📌</span>
+            Zniżki z gry są aktywne tylko w dniach ogłoszonej promocji.
+        </li>
+        <li>
+            <span class="pin">📌</span>
+            Rabat działa przy zamówieniach od 60 zł (według aktualnego cennika).
+        </li>
+        <li>
+            <span class="pin">📌</span>
+            Wygrana kwota zostaje odjęta od całego zamówienia przy płatności.
+        </li>
+        <li>
+            <span class="pin">📌</span>
+            Zniżki z gry nie łączą się z innymi promocjami.
+        </li>
+        <li>
+            <span class="pin">📌</span>
+            Jedna zniżka z gry na osobę dziennie.
+        </li>
+        <li>
+            <span class="pin">📌</span>
+            Rabat jest jednorazowy i niewymienny na gotówkę.
+        </li>
+        <li>
+            <span class="pin">📌</span>
+            Zniżki z kilku gier nie łączą się — liczy się tylko zniżka z jednej rozgrywki.
+        </li>
+    </ul>
+</div>
+
+<div class="modal-section game-box" id="rulesText">
+    <h2 class="section-title">Co daje każde złapanie?</h2>
+    <ul class="game-list">
+        <li> Paczka kawy = <b>+0,10 zł</b></li>
+        <li> Super Słoń Logo = <b>+0,80 zł</b></li>
+        <li> Paczka z Ręką = <b>+0,50 zł</b></li>
+        <li> <span class="bomb-icon">💣</span> Bomba = <b class="minus">−3 zł</b></li>
+        <li> Zestaw trzech kaw = <b class="minus">−0,40 zł</b></li>
+        <li> Złap mnie — spowolnienie czasu na <b>3 sekundy</b></li>
+    </ul>
+</div>
+
+<button class="btn" id="start">Graj!</button>
+<p id="totalGamesInfo" class="text-muted" style="margin-top:8px">Twoje rozegrane gry: 0</p>
+
             </div>
         </div>
     </div>
@@ -909,18 +1529,18 @@
                     fallbackSvg: `<svg xmlns='http://www.w3.org/2000/svg' width='56' height='56'><rect x='5' y='5' width='46' height='46' rx='8' fill='#ffd7b3'/></svg>`
                 },
                 super: {
-                    reward: 0.80, size: 56, src: './logo.png', chance: 0.30, maxPerGame: 3, allowEvade: true, allowSwim: true,
+                    reward: 0.80, size: 86, src: './logo.png', chance: 0.30, maxPerGame: 3, allowEvade: true, allowSwim: true,
                     sound: { src: './super.mp3', volume: 0.7 },
                     fallbackSvg: `<svg xmlns='http://www.w3.org/2000/svg' width='56' height='56'><circle cx='28' cy='28' r='26' fill='#ffd7b3'/></svg>`
                 },
                 big: { reward: 0.5, size: 185, src: './big.png', chance: 0.30, maxPerGame: 3, allowEvade: true, allowSwim: true, sound: { src: './hit.mp3', volume: 0.75 } },
                 bomb: { reward: -3.0, size: 65, chance: 0.25, icon: '💣', imageSrc: '', allowEvade: false, allowSwim: true, sound: { src: './bomb.mp3', volume: 0.7 } },
                 tornado: {
-                    reward: -0.4, size: 62, chance: 0.05, src: 'tornado.png', allowEvade: true, allowSwim: true,
+                    reward: -0.4, size: 80, chance: 0.05, src: 'tornado.png', allowEvade: true, allowSwim: true,
                     pull: { radius: 240, strength: 60, dur: 620 }, vibr: [40, 20, 60], sound: { src: './tornado.mp3', volume: 0.2 }
                 },
                 roma: {
-                    reward: 0.0, size: 84, src: './roma.png', chance: 0.25, maxPerGame: 1, allowEvade: false, allowSwim: true,
+                    reward: 0.0, size: 100, src: './roma.png', chance: 0.25, maxPerGame: 1, allowEvade: false, allowSwim: true,
                     fallMin: 2400, fallMax: 3600, sound: { src: './roma.mp3', volume: 0.7 },
                     fallbackSvg: `<svg xmlns='http://www.w3.org/2000/svg' width='64' height='64'><circle cx='32' cy='32' r='30' fill='#ffd7b3'/></svg>`
                 }
@@ -955,7 +1575,7 @@
         (function setRules() {
             const E = CONFIG.elements;
             const txt = [
-                `• Paczka kawy = <b>+${zl(E.normal.reward)}</b>`,
+                ` Paczka kawy = <b>+${zl(E.normal.reward)}</b>`,
                 `• Super Słoń Logo = <b>+${zl(E.super.reward)}</b>`,
                 `• Paczka z Ręką = <b>+${zl(E.big.reward)}</b>`,
                 `💣 Bomba = <b>${zl(E.bomb.reward)}</b>`,
@@ -1036,6 +1656,14 @@
             }
             const f = document.createElement('div'); f.className = 'crit-flash'; app.appendChild(f); setTimeout(() => f.remove(), 360);
         }
+
+        function flashCrit() {
+                const f = document.createElement('div');
+                f.className = 'crit-flash';         // или 'crit-ring'
+                document.querySelector('.app').appendChild(f);
+                f.addEventListener('animationend', () => f.remove());
+            }
+
         function twistBurst(x, y, n = 8) {
             for (let i = 0; i < n; i++) {
                 const t = document.createElement('div'); t.className = 'twist'; t.style.left = x + 'px'; t.style.top = y + 'px';
@@ -1075,6 +1703,8 @@
                 app.appendChild(d); setTimeout(() => d.remove(), 1400);
             }
         }
+
+        
 
         /* Таблица лидеров (top-3) */
         const LB_KEY = 'ec_leaderboard_v1';
@@ -1247,6 +1877,55 @@
                 shardsBurst(e.clientX, e.clientY, 28); romaPrismFX(e.clientX, e.clientY); shake(); enterSlowmo(3000); e.currentTarget.remove();
             }, { once: true });
         }
+        function spawnShard(x, y) {
+                const el = document.createElement('div');
+                el.className = 'prism-shard';
+                el.style.left = `${x}px`;
+                el.style.top = `${y}px`;
+                el.style.setProperty('--dx', `${(Math.random() - 0.5) * 160}px`);
+                el.style.setProperty('--dy', `${(Math.random() - 0.5) * 120}px`);
+                el.style.setProperty('--rot', `${Math.random() * 360}deg`);
+                document.body.appendChild(el);
+                el.addEventListener('animationend', () => el.remove());
+            }
+
+            function spawnHalo(x, y) {
+                    const el = document.createElement('div');
+                    el.className = 'prism-halo';
+                    el.style.left = x + 'px';
+                    el.style.top = y + 'px';
+                    document.querySelector('.app').appendChild(el);
+                    el.addEventListener('animationend', () => el.remove());
+                }
+            
+            function spawnTrail(x, y) {
+                    const t = document.createElement('div');
+                    t.className = 'prism-trail';
+                    t.style.left = `${x}px`;
+                    t.style.top = `${y}px`;
+                    t.style.setProperty('--dx', `${(Math.random() - 0.5) * 40}px`);
+                    t.style.setProperty('--dy', `${(Math.random() - 0.5) * 40}px`);
+                    document.querySelector('.app').appendChild(t);
+                    t.addEventListener('animationend', () => t.remove());
+                }
+
+             
+
+
+                    document.addEventListener('pointerdown', e => {
+                        coffeeDust(e.clientX, e.clientY);
+                    });
+
+    function spawnCoffeeSteam() {
+        const app = document.querySelector('.app');
+        if (!app) return;
+
+        const steam = document.createElement('div');
+        steam.className = 'coffee-steam';
+        app.appendChild(steam);
+        steam.addEventListener('animationend', () => steam.remove());
+    }
+
 
         /* Торнадо притяжение */
         function pullNearby(x, y, { radius = 220, strength = 60, dur = 620 } = {}) {
@@ -1282,56 +1961,126 @@
         function tick(now) { const left = (CONFIG.game.duration - (now - t0)) / 1000; tEl.textContent = Math.max(0, left).toFixed(1); if (left > 0) requestAnimationFrame(tick); else endGame(); }
         function clearField() { document.querySelectorAll('.logo,.super,.big,.tornado,.bomb,.roma,.sheet,.ring,.confetti,.float,.boom,.crit-flash,.crit-burst,.crit-ray,.twist,.vortex').forEach(n => n.remove()); }
 
-        function startGame() {
-            try { navigator.vibrate?.(40); } catch { }
-            running = false; if (spawnTimer) clearInterval(spawnTimer);
-            clearField(); discount = 0; superCount = 0; bigCount = 0; romaCount = 0; exitSlowmo(); update();
-            startOv.style.display = 'none';
-            tickNo = 0; planSpecials();
-            running = true; t0 = performance.now(); spawnTimer = setInterval(spawn, CONFIG.game.spawnInterval);
-            if (CONFIG.sounds.enabled && bgMusic) { try { bgMusic.currentTime = 0; bgMusic.play(); } catch { } }
-            requestAnimationFrame(tick);
-        }
+        // === START / END + надёжная кнопка "Graj!" ===
 
-        function endGame() {
-            running = false; clearInterval(spawnTimer);
-            const final = Math.round(discount);
-            const s = document.createElement('div'); s.className = 'sheet';
-            const currentLB = loadScores();
+            // запуск игры
+            function startGame() {
+                try { navigator.vibrate?.(40); } catch { }
 
-            totalGames += 1;
-            localStorage.setItem(LS_KEYS.total, String(totalGames));
-            renderTotalGames();                     // <- добавили обновление счётчика
+                // прячем стартовый оверлей и выключаем его клики
+                startOv.style.display = 'none';
+                startOv.style.pointerEvents = 'none';
 
-            s.innerHTML =
-                `<div style="text-align:center">
-          <h2>Koniec!</h2>
-          <p>Twój rabat: <b>${zl(final)}</b></p>
-          <p style="opacity:.9;margin-top:12px">Zrób zrzut ekranu i <b>wyślij nam w wiadomości</b>.</p>
+                // сбросы
+                running = false; if (spawnTimer) clearInterval(spawnTimer);
+                clearField(); discount = 0; superCount = 0; bigCount = 0; romaCount = 0; exitSlowmo(); update();
 
-          <div style="margin:12px 0 6px">
-            <input id="lbName" type="text" maxlength="16" placeholder="Twoje imię"
-                   style="width:220px; padding:10px 12px; border-radius:10px; border:1px solid #333; background:#0f0f0f; color:#fff; font-weight:700"/>
-            <button class="btn" id="saveScore" style="margin-left:8px">Zapisz</button>
-            <p style="opacity:.9;margin-top:12px">Max 3 osoby.</p>
-          </div>
+                // подготовка
+                tickNo = 0; planSpecials();
 
-          <div id="lbBox">${renderLeaderboardHTML(currentLB)}</div>
+                // запуск цикла спавна и рендера
+                running = true; t0 = performance.now();
+                spawnTimer = setInterval(spawn, CONFIG.game.spawnInterval);
 
-          <br>
-          <button class="btn" id="again">Jeszcze raz</button>
-        </div>`;
+                if (CONFIG.sounds.enabled && bgMusic) {
+                    try { bgMusic.currentTime = 0; bgMusic.play(); } catch { }
+                }
 
-            document.body.appendChild(s);
-            s.querySelector('#saveScore').onclick = () => {
-                const name = s.querySelector('#lbName').value.trim() || 'Gość';
-                const top = saveScore(name, final);
-                s.querySelector('#lbBox').innerHTML = renderLeaderboardHTML(top);
-            };
-            s.querySelector('#again').onclick = () => { s.remove(); startOv.style.display = 'flex'; };
-        }
+                requestAnimationFrame(tick);
+                console.log('Gra startuje!');
+            }
 
-        document.getElementById('start').addEventListener('pointerdown', startGame);
+ 
+            // завершение игры
+            function endGame() {
+                running = false; clearInterval(spawnTimer);
+
+                const final = Math.round(discount);
+                const s = document.createElement('div'); s.className = 'sheet';
+                const currentLB = loadScores();
+                const app = document.querySelector('.app');
+                app.classList.add('end-wow');
+
+                setTimeout(() => app.classList.remove('end-wow'), 900);
+
+                totalGames += 1;
+                localStorage.setItem(LS_KEYS.total, String(totalGames));
+                renderTotalGames();
+
+                s.innerHTML = `
+    <div style="text-align:center">
+      <h2>Koniec!</h2>
+      <p>Twój rabat: <b id="rabatVal">${zl(final)}</b></p>
+
+      <p style="opacity:.9;margin-top:12px">Zrób zrzut ekranu i <b>wyślij nam w wiadomości</b>.</p>
+
+      <div style="margin:12px 0 6px">
+        <input id="lbName" type="text" maxlength="16" placeholder="Twoje imię"
+               style="width:220px; padding:10px 12px; border-radius:10px; border:1px solid #333; background:#0f0f0f; color:#fff; font-weight:700"/>
+        <button class="btn" id="saveScore" style="margin-left:8px">Zapisz</button>
+        <p style="opacity:.9;margin-top:12px">Tutaj możesz zapisywać i śledzić swoje wyniki w grze.</p>
+      </div>
+
+      <div id="lbBox">${renderLeaderboardHTML(currentLB)}</div>
+
+      <br>
+      <button class="btn" id="again">Jeszcze raz</button>
+    </div>`;
+
+    // после вставки s.innerHTML:
+                s.querySelector('#rabatVal')?.classList.add('rabat-glow-final');
+
+                document.body.appendChild(s);
+
+                s.querySelector('#saveScore').onclick = () => {
+                    const name = s.querySelector('#lbName').value.trim() || 'Gość';
+                    const top = saveScore(name, final);
+                    s.querySelector('#lbBox').innerHTML = renderLeaderboardHTML(top);
+                };
+
+                s.querySelector('#again').onclick = () => {
+                    s.remove();
+                    // показываем стартовый экран и снова монтируем кнопку
+                    startOv.style.display = 'flex';
+                    startOv.style.pointerEvents = 'auto';
+                    setupStartButton();
+                };
+            }
+
+
+            // --- надёжная привязка кнопки "Graj!" ---
+            function setupStartButton() {
+                const oldBtn = document.getElementById('start');
+                if (!oldBtn) return;
+
+                // снять возможные старые обработчики — клонируем
+                const newBtn = oldBtn.cloneNode(true);
+                oldBtn.replaceWith(newBtn);
+
+                let lock = false; // защита от двойного тапа/клика
+                newBtn.disabled = false;
+
+                newBtn.addEventListener('pointerdown', (e) => {
+                    e.preventDefault();
+                    if (lock || newBtn.disabled) return;
+
+                    lock = true;
+                    newBtn.disabled = true;
+
+                    // небольшой анти-даблтап буфер
+                    setTimeout(() => { lock = false; newBtn.disabled = false; }, 600);
+
+                    startGame();
+                }, { passive: false });
+            }
+
+            // первичный монтаж при загрузке
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', setupStartButton);
+            } else {
+                setupStartButton();
+            }
+
     </script>
 </body>
 
